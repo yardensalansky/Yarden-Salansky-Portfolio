@@ -27,21 +27,17 @@ function figmaAssetFallbackPlugin() {
   }
 }
 
-
 export default defineConfig({
-  base: '/portfolio_yarden_website/', // 👈 ADD THIS LINE HERE
+  base: '/Yarden-Salansky-Portfolio/', // 👈 ADD THIS EXACT LINE
   plugins: [
-    // The React and Tailwind plugins are both required for Make, even if
-    // Tailwind is not being actively used – do not remove them
     react(),
     tailwindcss(),
-    // Make exported files from Figma compile even when raw assets were not included.
     figmaAssetFallbackPlugin(),
   ],
   resolve: {
     alias: {
-      // Alias @ to the src directory
       '@': path.resolve(__dirname, './src'),
     },
   },
 })
+
