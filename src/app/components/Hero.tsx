@@ -9,9 +9,6 @@ interface HeroProps {
   onRestart?: () => void;
   onAbout: () => void;
   isDarkMode: boolean;
-  /** When true, hero video/copy/decor are hidden; kinetic stage fills the card under the CTAs. */
-  playModeActive?: boolean;
-  kineticStage?: React.ReactNode;
 }
 
 /** Design artboard 1400×900 → hero card 1100×650 */
@@ -25,7 +22,7 @@ const HERO_STONE_CTA_CLASS =
   "pointer-events-auto flex h-16 shrink-0 cursor-pointer items-center justify-center border-0 bg-stone-100 px-6 py-4 font-['Clash_Grotesk'] text-2xl font-semibold leading-none tracking-wide text-black whitespace-nowrap";
 
 export const Hero = React.forwardRef<HTMLDivElement, HeroProps>(function Hero(
-  { onExplore, onPlay, onRestart, onAbout, isDarkMode: _isDarkMode, playModeActive, kineticStage },
+  { onExplore, onPlay, onRestart: _onRestart, onAbout, isDarkMode: _isDarkMode },
   ref,
 ) {
   const scaleX = HERO_W / DESIGN_W;
@@ -41,23 +38,15 @@ export const Hero = React.forwardRef<HTMLDivElement, HeroProps>(function Hero(
       style={{ pointerEvents: 'auto' }}
       onPointerDown={(e) => e.stopPropagation()}
     >
-      {!playModeActive && (
-        <video
-          className="pointer-events-none absolute left-1/2 top-0 z-0 h-full w-auto max-w-full -translate-x-1/2 object-contain object-top"
-          src={CLOUDINARY_VIDEOS.hero_loop}
-          autoPlay
-          loop
-          muted
-          playsInline
-          aria-hidden
-        />
-      )}
-
-      {playModeActive && kineticStage && (
-        <div className="absolute inset-0 z-[1] min-h-0 min-w-0 overflow-hidden rounded-2xl">
-          {kineticStage}
-        </div>
-      )}
+      <video
+        className="pointer-events-none absolute left-1/2 top-0 z-0 h-full w-auto max-w-full -translate-x-1/2 object-contain object-top"
+        src={CLOUDINARY_VIDEOS.hero_loop}
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden
+      />
 
       {/* Figma layout (1400×900) scaled non-uniformly to fill 1100×650; video unchanged above */}
       <div
@@ -72,39 +61,22 @@ export const Hero = React.forwardRef<HTMLDivElement, HeroProps>(function Hero(
         <div className="relative h-[900px] w-[1400px] overflow-visible">
           <div className="pointer-events-auto absolute bottom-[58px] left-[48px] right-[48px] flex flex-row items-center justify-between gap-5">
             <div className="flex shrink-0 flex-row flex-wrap items-center gap-5">
-              {onPlay &&
-                (playModeActive ? (
-                  <motion.button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (onRestart) onRestart();
-                      else onPlay?.();
-                    }}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 0.15 }}
-                    className={HERO_STONE_CTA_CLASS}
-                  >
-                    RESTART
-                  </motion.button>
-                ) : (
-                  <motion.button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onPlay();
-                    }}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 0.15 }}
-                    className={HERO_STONE_CTA_CLASS}
-                  >
-                    PLAY WITH MY BRAIN
-                  </motion.button>
-                ))}
+              {onPlay && (
+                <motion.button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPlay();
+                  }}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, delay: 0.15 }}
+                  className={HERO_STONE_CTA_CLASS}
+                >
+                  PLAY WITH MY BRAIN
+                </motion.button>
+              )}
 
               <motion.button
                 type="button"
@@ -140,14 +112,12 @@ export const Hero = React.forwardRef<HTMLDivElement, HeroProps>(function Hero(
             </div>
           </div>
 
-          {!playModeActive && (
-            <div className="pointer-events-none absolute left-[56px] top-[546px] h-56 w-[945.66px] justify-start font-['Clash_Grotesk'] text-4xl font-medium leading-[1.25] text-white">
-              Welcome to a piece of my mind.
-              <br />
-              I&apos;m a Product Designer &amp; Visual Storyteller who loves working from the sofa, but I&apos;ll give
-              it up for a good job.
-            </div>
-          )}
+          <div className="pointer-events-none absolute left-[56px] top-[546px] h-56 w-[945.66px] justify-start font-['Clash_Grotesk'] text-4xl font-medium leading-[1.25] text-white">
+            Welcome to a piece of my mind.
+            <br />
+            I&apos;m a Product Designer &amp; Visual Storyteller who loves working from the sofa, but I&apos;ll give
+            it up for a good job.
+          </div>
         </div>
       </div>
     </motion.div>

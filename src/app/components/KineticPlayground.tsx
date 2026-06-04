@@ -9,6 +9,12 @@ import {
   type ReactNode,
 } from 'react';
 import { X, Dice5 } from 'lucide-react';
+import { CurvedLine } from './CurvedLine';
+
+/** Gutter between controller column and kinetic stage inside the play card. */
+const PLAY_INTERNAL_GUTTER = 48;
+/** Overlap so the internal connector tucks under both card edges (matches canvas connectors). */
+const PLAY_INTERNAL_CONNECTOR_OVERLAP = 18;
 
 type ThemeId =
   | 'collage'
@@ -19,12 +25,10 @@ type ThemeId =
   | 'stacks'
   | 'river'
   | 'cascade'
-  | 'interwoven'
   | 'modern'
   | 'vector'
   | 'raw'
   | 'blue'
-  | 'flow'
   | 'flag';
 
 interface PlayConfig {
@@ -100,12 +104,10 @@ const themesList: ThemeId[] = [
   'stacks',
   'river',
   'cascade',
-  'interwoven',
   'modern',
   'vector',
   'raw',
   'blue',
-  'flow',
   'flag',
 ];
 
@@ -278,7 +280,6 @@ function KineticPlayProviderActive({
       spiral: { fontSize: 2.2, rows: 177, amplitude: 10, frequency: 0.6 },
       river: { fontSize: 2, rows: 10, amplitude: 100, frequency: 0.8 },
       cascade: { fontSize: 3.5, amplitude: 60, frequency: 1.2 },
-      interwoven: { fontSize: 3.2, rows: 12, amplitude: 90, frequency: 1.1 },
       bubbles: { fontSize: 7.7, rows: 8, amplitude: 40, frequency: 1.5 },
       stacks: { fontSize: 5, rows: 15, amplitude: 35, frequency: 1.2 },
       blue: { fontSize: 4.5, amplitude: 30, frequency: 0.5 },
@@ -286,7 +287,6 @@ function KineticPlayProviderActive({
       vector: { fontSize: 6.5, amplitude: 40, frequency: 1 },
       raw: { fontSize: 9, amplitude: 30, frequency: 1.5 },
       ribbons: { fontSize: 4.2, rows: 8, amplitude: 60, frequency: 1.2 },
-      flow: { fontSize: 3.5, rows: 10, amplitude: 25, frequency: 1.5 },
       flag: { fontSize: 5.5, amplitude: 50, frequency: 1.2 },
     };
 
@@ -352,47 +352,6 @@ function KineticPlayProviderActive({
             <div key={i}>{word}</div>
           ))}
         </div>
-      </div>
-    );
-  };
-
-  const renderInterwoven = () => {
-    const count = 12;
-    return (
-      <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
-        {Array.from({ length: count }).map((_, i) => {
-          const color = i % 2 === 0 ? config.textColor : config.accentColor;
-          const fallAngle = (Math.sin(steppedTick * 1.5 + i * 0.3) + 1) * 45;
-          const xPos = (i / count) * 120 - 60;
-
-          return (
-            <div
-              key={i}
-              className="absolute flex items-center justify-center border-x border-black/5 shadow-2xl"
-              style={{
-                height: 'min(420px, 140%)',
-                width: `${config.fontSize * 1.2}vh`,
-                backgroundColor: color,
-                transform: `translate3d(${xPos}vh, 0, 0) rotate(${fallAngle}deg)`,
-                zIndex: i,
-                transformOrigin: 'bottom center',
-                transition: 'transform 0.1s linear',
-              }}
-            >
-              <div
-                className="w-[200vh] whitespace-nowrap text-center font-black uppercase italic"
-                style={{
-                  fontSize: `${config.fontSize * 0.5}vh`,
-                  color: config.bgColor,
-                  transform: 'rotate(-90deg)',
-                  fontFamily: config.fontFamily,
-                }}
-              >
-                {DISPLAY_TEXT.repeat(8)}
-              </div>
-            </div>
-          );
-        })}
       </div>
     );
   };
@@ -543,8 +502,6 @@ function KineticPlayProviderActive({
         return renderCascade();
       case 'spiral':
         return renderSpiral();
-      case 'interwoven':
-        return renderInterwoven();
       case 'bubbles':
         return renderBubbles();
       case 'stacks':
@@ -661,53 +618,29 @@ function KineticPlayProviderActive({
         );
       case 'blue':
         return (
-          <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+          <div className="relative box-border flex h-full w-full items-center justify-center p-6 md:p-8">
             <div
-              className="absolute inset-0 opacity-10"
+              className="pointer-events-none absolute inset-6 opacity-10 md:inset-8"
               style={{
                 backgroundImage: `linear-gradient(${config.textColor} 1px, transparent 1px), linear-gradient(90deg, ${config.textColor} 1px, transparent 1px)`,
                 backgroundSize: '40px 40px',
               }}
             />
             <div
-              className="border-4 p-6 text-center font-mono uppercase tracking-[0.2em]"
+              className="relative box-border max-w-full border-4 px-6 py-5 text-center font-mono uppercase leading-tight tracking-[0.2em]"
               style={{
-                fontSize: getResponsiveFontSize(config.fontSize * 1.5),
+                fontSize: 'clamp(16px, 3.2vw, 48px)',
                 color: config.textColor,
                 borderColor: config.textColor,
-                transform: `rotate(${Math.sin(steppedTick) * 10}deg)`,
+                transform: `rotate(${Math.sin(steppedTick) * 5}deg)`,
                 fontFamily: config.fontFamily,
               }}
             >
-              {DISPLAY_TEXT}
-            </div>
-          </div>
-        );
-      case 'flow':
-        return (
-          <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
-            <div className="flex flex-col items-center">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="whitespace-nowrap font-black uppercase italic opacity-20"
-                  style={{
-                    fontSize: 'min(8vw, 48px)',
-                    lineHeight: 0.7,
-                    transform: `translate3d(${Math.sin(steppedTick + i * 0.2) * 150}px, 0, 0)`,
-                    color: config.textColor,
-                    fontFamily: config.fontFamily,
-                  }}
-                >
-                  {DISPLAY_TEXT}
-                </div>
+              {DISPLAY_TEXT.split(' ').map((word, i) => (
+                <span key={i} className="block">
+                  {word}
+                </span>
               ))}
-              <div
-                className="absolute z-10 scale-110 px-2 text-center text-3xl font-black uppercase drop-shadow-2xl md:text-5xl"
-                style={{ color: config.textColor, fontFamily: config.fontFamily }}
-              >
-                {DISPLAY_TEXT}
-              </div>
             </div>
           </div>
         );
@@ -806,7 +739,7 @@ export function KineticStylePanel() {
               key={id}
               type="button"
               onClick={() => applyPreset(id)}
-              className={`rounded-md border px-2 py-1.5 text-left text-[11px] font-semibold uppercase leading-snug tracking-tight transition-colors ${
+              className={`rounded-md border px-2 py-1.5 text-left text-[11px] font-semibold uppercase leading-snug tracking-[0.14em] transition-colors ${
                 config.theme === id
                   ? 'border-[#1F1F1F] bg-[#1F1F1F] text-white'
                   : 'border-black/10 bg-white text-black hover:border-black/25'
@@ -880,9 +813,9 @@ export function KineticStylePanel() {
   );
 }
 
-/** Full-bleed kinetic canvas for inside the hero frame. */
+/** Full-bleed kinetic canvas inside the play station card. */
 export function KineticHeroStage() {
-  const { config, noiseFilterId, renderCurrentTheme } = useKineticPlay();
+  const { config, noiseFilterId, renderCurrentTheme, onToggle } = useKineticPlay();
 
   return (
     <div className="absolute inset-0 min-h-0 min-w-0 overflow-hidden">
@@ -912,6 +845,19 @@ export function KineticHeroStage() {
       <div className="absolute inset-0 z-[3] flex min-h-0 min-w-0 items-center justify-center overflow-hidden">
         {renderCurrentTheme()}
       </div>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle();
+        }}
+        onPointerDown={(e) => e.stopPropagation()}
+        className="absolute right-3 top-3 z-30 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/15 bg-white/92 p-0 text-black shadow-md backdrop-blur-sm hover:bg-white"
+        aria-label="Close play"
+        title="Close play"
+      >
+        <X size={18} strokeWidth={2.25} aria-hidden />
+      </button>
       <p className="pointer-events-none absolute bottom-2 left-3 z-[4] select-none text-[7px] uppercase tracking-[0.2em] text-black/25">
         Yarden portfolio · kinetic
       </p>
@@ -921,6 +867,44 @@ export function KineticHeroStage() {
           100% { transform: rotateX(var(--intensity)); }
         }
       `}</style>
+    </div>
+  );
+}
+
+/** Left play card (1100×650, same proportion as hero): style controls + kinetic stage. */
+export function PlayStation() {
+  const controllerWidth = 240;
+  const connectorX1 = controllerWidth - PLAY_INTERNAL_CONNECTOR_OVERLAP;
+  const connectorX2 =
+    controllerWidth + PLAY_INTERNAL_GUTTER + PLAY_INTERNAL_CONNECTOR_OVERLAP;
+
+  return (
+    <div
+      className="relative flex h-full w-full flex-row"
+      style={{ gap: PLAY_INTERNAL_GUTTER }}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2">
+          <CurvedLine
+            x1={connectorX1}
+            y1={0}
+            x2={connectorX2}
+            y2={0}
+            delay={0.12}
+            color="#B8B8B8"
+            strokeWidth={2.5}
+            zIndex={0}
+          />
+        </div>
+      </div>
+
+      <div className="relative z-[1] h-full shrink-0" style={{ width: controllerWidth }}>
+        <KineticStylePanel />
+      </div>
+      <div className="relative z-[1] min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl shadow-lg">
+        <KineticHeroStage />
+      </div>
     </div>
   );
 }

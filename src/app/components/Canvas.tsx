@@ -37,8 +37,7 @@ import { ProjectDetail } from './ProjectDetail';
 import { CurvedLine } from './CurvedLine';
 import {
   KineticPlayProvider,
-  KineticStylePanel,
-  KineticHeroStage,
+  PlayStation,
 } from './KineticPlayground';
 import { ZoomIn, ZoomOut, Moon, Sun, Home } from 'lucide-react';
 import { CLOUDINARY_ASSETS, CLOUDINARY_VIDEOS } from '../../constants/cloudinaryAssets';
@@ -305,6 +304,31 @@ function zoomMatchingHeroRowScale(
   return Math.min(zoomMax, Math.max(zoomMin, z));
 }
 
+/** Camera centered on the play card (viewport center at zoom z). */
+function computePlayCardCamera(args: {
+  z: number;
+  vw: number;
+  vh: number;
+  rowScale: number;
+  scaleOriginX: number;
+  scaleOriginY: number;
+  playPanelX: number;
+  playPanelWidth: number;
+  heroY: number;
+  playPanelHeight: number;
+}): { camX: number; camY: number } {
+  const centerX = args.playPanelX + args.playPanelWidth / 2;
+  const centerY = args.heroY + args.playPanelHeight / 2;
+
+  const innerX = args.scaleOriginX + args.rowScale * (centerX - args.scaleOriginX);
+  const innerY = args.scaleOriginY + args.rowScale * (centerY - args.scaleOriginY);
+
+  return {
+    camX: -args.z * (innerX - args.vw / 2),
+    camY: -args.z * (innerY - args.vh / 2),
+  };
+}
+
 /** Camera so the hero card alone is centered at zoom z (e.g. after closing about). */
 function computeHeroCenterCamera(args: {
   z: number;
@@ -373,9 +397,14 @@ export function Canvas() {
   const zoomMotion = useMotionValue(1);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [playModeActive, setPlayModeActive] = useState(false);
+  /** True while reverse zoom/pan runs; play panel stays mounted until this finishes. */
+  const [playClosing, setPlayClosing] = useState(false);
+  const playPanelVisible = playModeActive || playClosing;
   const [isHoveringPlayCard, setIsHoveringPlayCard] = useState(false);
   /** Bumps on each Explore click so we re-center the projects column even if it was already open. */
   const [exploreFocusTick, setExploreFocusTick] = useState(0);
+  /** Bumps on each Play open so the hero→play connector re-animates like Explore lines. */
+  const [playFocusTick, setPlayFocusTick] = useState(0);
   const [aboutVisible, setAboutVisible] = useState(false);
   /** Bumps on each About click so framing re-runs when already open (mirrors Explore). */
   const [aboutFocusTick, setAboutFocusTick] = useState(0);
@@ -388,6 +417,9 @@ export function Canvas() {
   /** Hero idle framing: only snap camera when viewport size changes (avoid fighting user pan). */
   const lastHeroIdleLayoutRef = useRef<{ vw: number; vh: number } | null>(null);
   const prevPlayModeActiveRef = useRef(false);
+  const prevPlayPanelVisibleRef = useRef(false);
+  /** Skip duplicate hero pan when play close animation already landed on hero. */
+  const skipPlayJustClosedCameraRef = useRef(false);
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const cameraX = useMotionValue(0);
@@ -421,17 +453,15 @@ export function Canvas() {
   const getStationGutter = (vw: number) => Math.round(Math.max(260, Math.min(420, vw * 0.24)));
   const { width: vw, height: vh } = useViewportSize();
   const stationGutter = getStationGutter(vw);
-  /** Small overlap so connector endpoints sit behind card edges. */
+  /** Small overlap so connector endpoints sit behind card edges (works / detail). */
   const CONNECTOR_OVERLAP = 18;
+  /** Clear space between play card edge and connector so the line sits in the gutter gap. */
+  const PLAY_CONNECTOR_GAP = 28;
   /** Connector color. */
   const connectorColor = '#B8B8B8';
 
   // Node positions in canvas space - adjusted for better vertical distribution
   const heroPos = { x: 400, y: 400 };
-  /** Max width of the kinetic column; actual width shrinks on narrow viewports so it stays on-screen with a centered hero. */
-  const KINETIC_PANEL_WIDTH_MAX = 200;
-  /** Tight gap between kinetic panel and hero (smaller than `CARD_GAP` so the pair fits when the hero stays viewport-centered). */
-  const PLAY_KINETIC_GAP = 18;
 
   // Initial view: center the Hero in the viewport.
   useLayoutEffect(() => {
@@ -445,11 +475,11 @@ export function Canvas() {
 
   const heroX = heroPos.x;
   const heroY = heroPos.y;
-  const kineticPanelWidth = Math.min(
-    KINETIC_PANEL_WIDTH_MAX,
-    Math.max(136, Math.round(vw * 0.142)),
-  );
-  const playPanelX = heroX - PLAY_KINETIC_GAP - kineticPanelWidth;
+  /** Play card: same 1100×650 proportion as hero; gap uses `stationGutter` like hero → works. */
+  const playPanelWidth = heroWidth;
+  const playPanelHeight = heroHeight;
+  const playPanelX = heroX - stationGutter - playPanelWidth;
+  const playPanelRightX = playPanelX + playPanelWidth;
 
   /** Top of card i aligns with hero top + i * stride (flex column, gap 60). */
   const projectStride = projectHeight + CARD_GAP;
@@ -470,6 +500,8 @@ export function Canvas() {
   const MIN_ROW_SCALE = 0.22;
   /** Target share of viewport for the hero (uniform scale; aspect ratio unchanged). */
   const HERO_VIEW_FRAC = 0.7;
+  /** Max zoom when Play is open (may exceed solo-hero cap to preserve card scale). */
+  const PLAY_ZOOM_MAX = 2.5;
   /** When opening works from Hero, center this project card ("A WEATHER" = `proj2`). */
   const EXPLORE_FOCUS_PROJECT_INDEX = 1;
   /** Target share of viewport for each work list card (uniform scale; 700×450 ratio unchanged). */
@@ -477,6 +509,9 @@ export function Canvas() {
   /** Target share of viewport for project detail (uniform scale; panel 1400×detailHeight). */
   const DETAIL_VIEW_FRAC = 0.99;
   const WORKS_LIST_ZOOM_DURATION_SEC = 0.85;
+  /** Play open/close: slower, ease-out for a smoother feel than works transitions. */
+  const PLAY_TRANSITION_DURATION_SEC = 1.4;
+  const PLAY_TRANSITION_EASE = [0.22, 1, 0.36, 1] as const;
   const DETAIL_ZOOM_DURATION_SEC = 0.78;
   const ZOOM_MIN = 0.22;
   /** Pan/zoom UI and hero/works auto-zoom. */
@@ -490,7 +525,9 @@ export function Canvas() {
   const clusterLayout = useMemo(() => {
     let clusterLeft = heroX;
     let clusterRight = heroX + heroWidth;
-    // Play kinetic panel is not included in row scale — hero stays fixed; panel mounts to the left only.
+    if (playPanelVisible) {
+      clusterLeft = Math.min(clusterLeft, playPanelX);
+    }
     if (projectsVisible) {
       clusterRight = Math.max(clusterRight, worksColumnLeft + projectWidth);
     }
@@ -510,6 +547,8 @@ export function Canvas() {
     heroY,
     heroWidth,
     heroHeight,
+    playPanelVisible,
+    playPanelX,
     projectsVisible,
     worksColumnLeft,
     projectWidth,
@@ -522,8 +561,12 @@ export function Canvas() {
 
   const { rowScale, scaleOriginX, scaleOriginY, clusterSpan } = clusterLayout;
 
-  const effectiveOriginX = scaleOriginX;
-  const effectiveOriginY = scaleOriginY;
+  const heroIdleRowScale = heroOnlyRowScale(vw, heroWidth, LAYOUT_MARGIN, MIN_ROW_SCALE);
+  const heroIdleOriginX = heroX + heroWidth / 2;
+  const heroIdleOriginY = heroY + heroHeight / 2;
+  /** During close, pin transform origin to hero so row-scale + unmount don't pop. */
+  const effectiveOriginX = playClosing ? heroIdleOriginX : scaleOriginX;
+  const effectiveOriginY = playClosing ? heroIdleOriginY : scaleOriginY;
 
   /** Cancels outer `zoomMotion` on the dot layer so grid spacing stays ~40px on screen while cards zoom. */
   const gridInverseScale = useTransform(zoomMotion, (z) => 1 / Math.max(z, 0.05));
@@ -549,12 +592,19 @@ export function Canvas() {
       rowScaleDidInitRef.current = true;
       return;
     }
+    /** Close path animates row scale in the zoom effect (synced with camera). */
+    if (playClosing) {
+      return;
+    }
+    /** Snap row scale when Play opens. */
+    const snapRowScaleInstant = playModeActive && !projectsVisible;
     rowScaleAnimRef.current = animate(rowScaleMotion, rowScale, {
-      duration: WORKS_LIST_ZOOM_DURATION_SEC,
+      duration: snapRowScaleInstant ? 0 : WORKS_LIST_ZOOM_DURATION_SEC,
       ease: [0.4, 0, 0.2, 1],
     });
+    prevPlayPanelVisibleRef.current = playPanelVisible;
     return () => rowScaleAnimRef.current?.stop();
-  }, [rowScale, rowScaleMotion]);
+  }, [rowScale, rowScaleMotion, playModeActive, playClosing, playPanelVisible, projectsVisible, playFocusTick]);
 
   const recomputeLogoOnDark = useCallback(() => {
     const logoEl = logoWordmarkRef.current;
@@ -584,7 +634,7 @@ export function Canvas() {
     projectsVisible,
     aboutVisible,
     selectedProject?.id,
-    playModeActive,
+    playPanelVisible,
     heroX,
     heroY,
     worksTop,
@@ -816,8 +866,50 @@ export function Canvas() {
         return cleanup;
       }
 
-      // Hero-only zoom: canonical hero target (matches first Play open); About uses same z with its own pan.
-      const targetZ = computeCanonicalHeroZoomTarget({
+      // Hero-only zoom; Play uses matched hero scale so the play card matches solo-hero size.
+      const targetZ = playModeActive && !playClosing
+        ? (() => {
+            const canonicalHeroZ = computeCanonicalHeroZoomTarget({
+              vw,
+              vh,
+              heroWidth,
+              heroHeight,
+              heroViewFrac: HERO_VIEW_FRAC,
+              layoutMargin: LAYOUT_MARGIN,
+              zoomMin: ZOOM_MIN,
+              zoomMax: PLAY_ZOOM_MAX,
+              minRowScale: MIN_ROW_SCALE,
+            });
+            const heroRowScale = heroOnlyRowScale(vw, heroWidth, LAYOUT_MARGIN, MIN_ROW_SCALE);
+            return zoomMatchingHeroRowScale(
+              canonicalHeroZ,
+              heroRowScale,
+              rowScale,
+              ZOOM_MIN,
+              PLAY_ZOOM_MAX,
+            );
+          })()
+        : computeCanonicalHeroZoomTarget({
+            vw,
+            vh,
+            heroWidth,
+            heroHeight,
+            heroViewFrac: HERO_VIEW_FRAC,
+            layoutMargin: LAYOUT_MARGIN,
+            zoomMin: ZOOM_MIN,
+            zoomMax: ZOOM_MAX,
+            minRowScale: MIN_ROW_SCALE,
+          });
+      const ease = [0.4, 0, 0.2, 1] as const;
+      const isPlayTransition = playClosing || (playModeActive && !playClosing);
+      const transitionEase = isPlayTransition ? PLAY_TRANSITION_EASE : ease;
+      const heroZoomDuration = isPlayTransition
+        ? PLAY_TRANSITION_DURATION_SEC
+        : aboutVisible || playJustClosed
+          ? WORKS_LIST_ZOOM_DURATION_SEC
+          : 0.55;
+
+      const heroIdleZ = computeCanonicalHeroZoomTarget({
         vw,
         vh,
         heroWidth,
@@ -828,13 +920,62 @@ export function Canvas() {
         zoomMax: ZOOM_MAX,
         minRowScale: MIN_ROW_SCALE,
       });
-      const ease = [0.4, 0, 0.2, 1] as const;
-      const heroZoomDuration =
-        aboutVisible || playModeActive ? WORKS_LIST_ZOOM_DURATION_SEC : 0.55;
+      const heroIdleCamera = computeHeroCenterCamera({
+        z: heroIdleZ,
+        vw,
+        vh,
+        rowScale: heroIdleRowScale,
+        scaleOriginX: heroIdleOriginX,
+        scaleOriginY: heroIdleOriginY,
+        heroX,
+        heroY,
+        heroWidth,
+        heroHeight,
+      });
+
+      let playCloseAnimStepsDone = 0;
+      const finishPlayClose = () => {
+        prevPlayPanelVisibleRef.current = false;
+        lastHeroIdleLayoutRef.current = { vw, vh };
+        skipPlayJustClosedCameraRef.current = true;
+        setPlayModeActive(false);
+        setPlayClosing(false);
+      };
+      const onPlayCloseAnimStepDone = () => {
+        playCloseAnimStepsDone += 1;
+        if (playCloseAnimStepsDone >= 3) {
+          finishPlayClose();
+        }
+      };
+
+      if (playClosing) {
+        rowScaleAnimRef.current?.stop();
+        rowScaleAnimRef.current = animate(rowScaleMotion, heroIdleRowScale, {
+          duration: heroZoomDuration,
+          ease: transitionEase,
+          onComplete: onPlayCloseAnimStepDone,
+        });
+        zoomAnimRef.current = animate(zoomMotion, heroIdleZ, {
+          duration: heroZoomDuration,
+          ease: transitionEase,
+          onComplete: onPlayCloseAnimStepDone,
+        });
+        worksCameraXAnimRef.current = animate(cameraX, heroIdleCamera.camX, {
+          duration: heroZoomDuration,
+          ease: transitionEase,
+          onComplete: onPlayCloseAnimStepDone,
+        });
+        worksCameraYAnimRef.current = animate(cameraY, heroIdleCamera.camY, {
+          duration: heroZoomDuration,
+          ease: transitionEase,
+          onComplete: onPlayCloseAnimStepDone,
+        });
+        return cleanup;
+      }
 
       zoomAnimRef.current = animate(zoomMotion, targetZ, {
         duration: heroZoomDuration,
-        ease,
+        ease: transitionEase,
       });
 
       if (aboutVisible) {
@@ -868,27 +1009,26 @@ export function Canvas() {
         const forceHero = forceHeroFramingRef.current;
         if (forceHeroFramingRef.current) forceHeroFramingRef.current = false;
 
-        if (playModeActive) {
-          const heroCamOriginX = heroX + heroWidth / 2;
-          const { camX, camY } = computeHeroCenterCamera({
+        if (playModeActive && !playClosing) {
+          const { camX, camY } = computePlayCardCamera({
             z: targetZ,
             vw,
             vh,
             rowScale,
-            scaleOriginX: heroCamOriginX,
+            scaleOriginX,
             scaleOriginY,
-            heroX,
+            playPanelX,
+            playPanelWidth,
             heroY,
-            heroWidth,
-            heroHeight,
+            playPanelHeight,
           });
           worksCameraXAnimRef.current = animate(cameraX, camX, {
-            duration: WORKS_LIST_ZOOM_DURATION_SEC,
-            ease,
+            duration: heroZoomDuration,
+            ease: transitionEase,
           });
           worksCameraYAnimRef.current = animate(cameraY, camY, {
-            duration: WORKS_LIST_ZOOM_DURATION_SEC,
-            ease,
+            duration: heroZoomDuration,
+            ease: transitionEase,
           });
         } else if (shouldRestoreCamera || forceHero) {
           const { camX, camY } = computeHeroCenterCamera({
@@ -911,6 +1051,8 @@ export function Canvas() {
             duration: 0.55,
             ease,
           });
+        } else if (playJustClosed && skipPlayJustClosedCameraRef.current) {
+          skipPlayJustClosedCameraRef.current = false;
         } else if (playJustClosed) {
           const { camX, camY } = computeHeroCenterCamera({
             z: targetZ,
@@ -954,62 +1096,6 @@ export function Canvas() {
           }
         }
       }
-
-      return cleanup;
-    }
-
-    lastAboutVisibleRef.current = false;
-
-    // Play from Explore (or any works view): same framing as hero Play — hero centered, panel tucked in via PLAY_KINETIC_GAP / kineticPanelWidth.
-    if (playModeActive && !selectedProject) {
-      const canonicalZ = computeCanonicalHeroZoomTarget({
-        vw,
-        vh,
-        heroWidth,
-        heroHeight,
-        heroViewFrac: HERO_VIEW_FRAC,
-        layoutMargin: LAYOUT_MARGIN,
-        zoomMin: ZOOM_MIN,
-        zoomMax: ZOOM_MAX,
-        minRowScale: MIN_ROW_SCALE,
-      });
-      const hRs = heroOnlyRowScale(vw, heroWidth, LAYOUT_MARGIN, MIN_ROW_SCALE);
-      const playTargetZ = zoomMatchingHeroRowScale(
-        canonicalZ,
-        hRs,
-        rowScale,
-        ZOOM_MIN,
-        ZOOM_MAX,
-      );
-      const ease = [0.4, 0, 0.2, 1] as const;
-      const duration = WORKS_LIST_ZOOM_DURATION_SEC;
-
-      zoomAnimRef.current = animate(zoomMotion, playTargetZ, {
-        duration,
-        ease,
-      });
-
-      const heroCamOriginX = heroX + heroWidth / 2;
-      const { camX, camY } = computeHeroCenterCamera({
-        z: playTargetZ,
-        vw,
-        vh,
-        rowScale,
-        scaleOriginX: heroCamOriginX,
-        scaleOriginY,
-        heroX,
-        heroY,
-        heroWidth,
-        heroHeight,
-      });
-      worksCameraXAnimRef.current = animate(cameraX, camX, {
-        duration,
-        ease,
-      });
-      worksCameraYAnimRef.current = animate(cameraY, camY, {
-        duration,
-        ease,
-      });
 
       return cleanup;
     }
@@ -1115,11 +1201,19 @@ export function Canvas() {
     aboutVisible,
     aboutFocusTick,
     homeResetTick,
+    playClosing,
     playModeActive,
+    playPanelVisible,
+    playFocusTick,
+    playPanelX,
+    playPanelWidth,
+    playPanelHeight,
+    stationGutter,
     zoomMotion,
   ]);
 
   const handleExplore = () => {
+    setPlayClosing(false);
     setPlayModeActive(false);
     setAboutVisible(false);
     setSelectedProject(null);
@@ -1129,6 +1223,7 @@ export function Canvas() {
   };
 
   const handleAbout = useCallback(() => {
+    setPlayClosing(false);
     setPlayModeActive(false);
     setProjectsVisible(false);
     setSelectedProject(null);
@@ -1136,21 +1231,32 @@ export function Canvas() {
     setAboutFocusTick((t) => t + 1);
   }, []);
 
+  const handleClosePlay = useCallback(() => {
+    if (playClosing || !playModeActive) return;
+    setPlayClosing(true);
+  }, [playClosing, playModeActive]);
+
   const handlePlay = useCallback(() => {
     setPlayModeActive((prev) => {
-      if (!prev) {
-        setSelectedProject(null);
-        setAboutVisible(false);
+      if (prev) {
+        if (!playClosing) setPlayClosing(true);
+        return true;
       }
-      return !prev;
+      setPlayClosing(false);
+      setSelectedProject(null);
+      setAboutVisible(false);
+      setProjectsVisible(false);
+      setPlayFocusTick((t) => t + 1);
+      return true;
     });
-  }, []);
+  }, [playClosing]);
 
   const handleRestart = useCallback(() => {
     zoomAnimRef.current?.stop();
     worksCameraXAnimRef.current?.stop();
     worksCameraYAnimRef.current?.stop();
     canvasResetToInitialRef.current = true;
+    setPlayClosing(false);
     setProjectsVisible(false);
     setSelectedProject(null);
     setAboutVisible(false);
@@ -1159,6 +1265,7 @@ export function Canvas() {
   }, []);
 
   const handleProjectClick = (project: Project, index: number) => {
+    setPlayClosing(false);
     setPlayModeActive(false);
     setLastOpenedProjectIndex(index);
     setSelectedProject(project);
@@ -1418,17 +1525,6 @@ export function Canvas() {
           }}
         >
           <div className="pointer-events-none absolute inset-0" aria-hidden>
-            {playModeActive && (
-              <CurvedLine
-                x1={playPanelX + kineticPanelWidth - CONNECTOR_OVERLAP}
-                y1={heroY + heroHeight / 2}
-                x2={heroX + CONNECTOR_OVERLAP}
-                y2={heroY + heroHeight / 2}
-                delay={0}
-                color={connectorColor}
-                strokeWidth={3}
-              />
-            )}
             {projectsVisible &&
               projects.map((project, index) => (
                 <CurvedLine
@@ -1469,40 +1565,45 @@ export function Canvas() {
           <div
             className="absolute flex flex-row items-start"
             style={{
-              left: heroX,
+              left: playPanelVisible ? playPanelX : heroX,
               top: worksTop,
-              gap: stationGutter,
               pointerEvents: 'auto',
             }}
           >
-            <KineticPlayProvider active={playModeActive} onToggle={handlePlay}>
-            {playModeActive && (
-              <div
-                ref={playDarkSurfaceRef}
-                className="absolute z-[3] flex min-h-0 min-w-0 flex-col"
-                style={{
-                  left: -(PLAY_KINETIC_GAP + kineticPanelWidth),
-                  top: heroY - worksTop,
-                  width: kineticPanelWidth,
-                  height: heroHeight,
-                  pointerEvents: 'auto',
-                }}
-                onMouseEnter={() => setIsHoveringPlayCard(true)}
-                onMouseLeave={() => setIsHoveringPlayCard(false)}
-              >
-                <KineticStylePanel />
-              </div>
+            {playPanelVisible && (
+              <KineticPlayProvider active={playPanelVisible} onToggle={handleClosePlay}>
+                <motion.div
+                  ref={playDarkSurfaceRef}
+                  className="z-[3] shrink-0"
+                  animate={{ opacity: playClosing ? 0 : 1 }}
+                  transition={{
+                    duration: PLAY_TRANSITION_DURATION_SEC,
+                    ease: [...PLAY_TRANSITION_EASE],
+                  }}
+                  style={{
+                    marginTop: heroY - worksTop,
+                    width: playPanelWidth,
+                    height: playPanelHeight,
+                    marginRight: stationGutter,
+                    pointerEvents: playClosing ? 'none' : 'auto',
+                  }}
+                  onMouseEnter={() => setIsHoveringPlayCard(true)}
+                  onMouseLeave={() => setIsHoveringPlayCard(false)}
+                >
+                  <PlayStation />
+                </motion.div>
+              </KineticPlayProvider>
             )}
+
             <div
               className="flex shrink-0 flex-col"
               style={{
                 marginTop: heroY - worksTop,
                 width: heroWidth,
+                marginRight: projectsVisible ? stationGutter : 0,
                 gap: CARD_GAP,
                 pointerEvents: 'auto',
               }}
-              onMouseEnter={playModeActive ? () => setIsHoveringPlayCard(true) : undefined}
-              onMouseLeave={playModeActive ? () => setIsHoveringPlayCard(false) : undefined}
             >
               <Hero
                 ref={heroDarkSurfaceRef}
@@ -1511,14 +1612,11 @@ export function Canvas() {
                 onRestart={handleRestart}
                 onAbout={handleAbout}
                 isDarkMode={isDarkMode}
-                playModeActive={playModeActive}
-                kineticStage={playModeActive ? <KineticHeroStage /> : undefined}
               />
               {aboutVisible && (
                 <AboutStation isDarkMode={isDarkMode} onClose={() => setAboutVisible(false)} />
               )}
             </div>
-          </KineticPlayProvider>
 
           {projectsVisible && (
             <div
@@ -1571,6 +1669,30 @@ export function Canvas() {
             </div>
           )}
           </div>
+
+          {playPanelVisible && (
+            <motion.div
+              className="pointer-events-none absolute inset-0 z-[5]"
+              aria-hidden
+              animate={{ opacity: playClosing ? 0 : 1 }}
+              transition={{
+                duration: PLAY_TRANSITION_DURATION_SEC,
+                ease: [...PLAY_TRANSITION_EASE],
+              }}
+            >
+              <CurvedLine
+                key={`hero-play-line-${playFocusTick}`}
+                x1={playPanelRightX + PLAY_CONNECTOR_GAP}
+                y1={heroY + heroHeight / 2}
+                x2={heroX - PLAY_CONNECTOR_GAP}
+                y2={heroY + heroHeight / 2}
+                delay={0}
+                color={connectorColor}
+                strokeWidth={2.5}
+                zIndex={5}
+              />
+            </motion.div>
+          )}
         </motion.div>
         </motion.div>
       </motion.div>

@@ -9,6 +9,8 @@ interface CurvedLineProps {
   color?: string;
   /** Stroke width in CSS pixels (scales with canvas zoom). */
   strokeWidth?: number;
+  /** Stack order when lines must sit above cards (e.g. hero ↔ play). */
+  zIndex?: number;
   /**
    * `absolute` (default): x/y are in the offset parent's coordinate space (desktop canvas).
    * `fixed`: x/y are viewport pixels (mobile connector over scrolling content).
@@ -26,6 +28,7 @@ export function CurvedLine({
   delay = 0,
   color = '#d0d0d0',
   strokeWidth = 4,
+  zIndex = 0,
   position = 'absolute',
 }: CurvedLineProps) {
   const minX = Math.min(x1, x2);
@@ -42,7 +45,9 @@ export function CurvedLine({
   const sx = dx >= 0 ? 1 : -1;
   const absDx = Math.abs(dx);
   // Longer horizontal tangents for open, elegant links at wider station gaps.
-  const pull = Math.min(absDx * 0.68, Math.max(240, absDx * 0.52));
+  const rawPull = Math.min(absDx * 0.68, Math.max(240, absDx * 0.52));
+  // Short links (e.g. hero ↔ play) need tighter tangents so the curve stays attached to both cards.
+  const pull = absDx < 160 ? Math.min(rawPull, absDx * 0.38) : rawPull;
 
   const path = `M ${localX1} ${localY1} C ${localX1 + sx * pull} ${localY1} ${localX2 - sx * pull} ${localY2} ${localX2} ${localY2}`;
 
@@ -59,7 +64,7 @@ export function CurvedLine({
         height: vbH,
         overflow: 'visible',
         pointerEvents: 'none',
-        zIndex: 0,
+        zIndex,
       }}
       viewBox={`0 0 ${vbW} ${vbH}`}
     >
