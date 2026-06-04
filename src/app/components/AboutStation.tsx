@@ -1,17 +1,30 @@
 import { motion } from 'motion/react';
+import { X } from 'lucide-react';
 
 /** Design artboard (px) — inner content stays at this size, then scaled uniformly. */
 const STATION_W = 675;
-const STATION_H = 593;
+
+/** Equal vertical inset for all card content (top title + bottom contact). */
+const ABOUT_CARD_PAD = 68;
+/** ~line height for `text-3xl` contact rows (design px). */
+const CONTACT_LINE_HEIGHT = 40;
+
+/** Contact block layout (design artboard px). */
+const CONTACT_HEADER_TOP = 431;
+const CONTACT_FIRST_TOP = 478;
+const CONTACT_LINE_GAP = 38;
+
+const CONTACT_LAST_TOP = CONTACT_FIRST_TOP + CONTACT_LINE_GAP * 3;
+const STATION_H = CONTACT_LAST_TOP + CONTACT_LINE_HEIGHT + ABOUT_CARD_PAD;
 
 /** Uniform scale: smaller card, identical layout / type proportions. */
 const ABOUT_CARD_SCALE = 0.68;
 
 export const ABOUT_STATION_HEIGHT = Math.round(STATION_H * ABOUT_CARD_SCALE);
 
-/** Tailwind default zinc-700 / zinc-300 (explicit so theme doesn’t skew the card). */
+/** Card background and text on dark panel. */
 const BG = '#3f3f46';
-const FG = '#d4d4d8';
+const FG = '#ffffff';
 
 interface AboutStationProps {
   onClose: () => void;
@@ -54,52 +67,74 @@ export function AboutStation({ onClose, isDarkMode: _isDarkMode }: AboutStationP
             onClose();
           }}
           onPointerDown={(e) => e.stopPropagation()}
-          className="absolute right-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full border text-xl leading-none shadow-md backdrop-blur-sm"
-          style={{
-            borderColor: 'rgba(255,255,255,0.2)',
-            backgroundColor: 'rgba(24,24,27,0.92)',
-            color: FG,
-          }}
+          className="absolute right-3 top-3 z-30 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/15 bg-white/92 p-0 text-black shadow-md backdrop-blur-sm hover:bg-white"
           aria-label="Close about"
           title="Close"
         >
-          ×
+          <X size={18} strokeWidth={2.25} aria-hidden />
         </button>
 
         <div className="relative h-full w-full" style={{ color: FG }}>
           <div
             id="about-station-title"
-            className="absolute left-[36px] top-[63px] w-[543px] justify-start font-['Clash_Grotesk']"
+            className="absolute left-[36px] w-[543px] justify-start font-['Clash_Grotesk'] tracking-[0.06em]"
+            style={{ top: ABOUT_CARD_PAD }}
           >
-            <span className="text-5xl font-semibold">
+            <span className="text-5xl font-semibold tracking-[0.05em]">
               Hi, I&apos;m Yarden
               <br />
             </span>
-            <span className="text-3xl font-normal">
+            <span className="text-3xl font-normal tracking-[0.08em]">
               {' '}
-              a graphic designer who enjoys building tools and systems that help me improve and rethink the way I
-              work.
+              A Product Designer &amp; Developer who enjoys building tools and systems that improve and rethink
+              the way we work.
               <br />
-              I&apos;m driven by curiosity, constantly learning, evolving, and refining how I think and create.
+              Driven by curiosity, I&apos;m constantly learning, evolving, and refining how I think, design, and
+              create.
             </span>
           </div>
 
-          <div className="absolute left-[36px] top-[399px] justify-start font-['Clash_Grotesk'] text-3xl font-semibold">
+          <div
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-semibold tracking-[0.1em]"
+            style={{ top: CONTACT_HEADER_TOP }}
+          >
             GET IN TOUCH
           </div>
           <a
+            href="tel:+972527483331"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            style={{ top: CONTACT_FIRST_TOP }}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            +972527483331
+          </a>
+          <a
             href="mailto:yardensal4@gmail.com"
-            className="absolute left-[36px] top-[446px] justify-start font-['Clash_Grotesk'] text-3xl font-normal"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            style={{ top: CONTACT_FIRST_TOP + CONTACT_LINE_GAP }}
             onPointerDown={(e) => e.stopPropagation()}
           >
             yardensal4@gmail.com
           </a>
           <a
-            href="tel:+972527483331"
-            className="absolute left-[36px] top-[493px] justify-start font-['Clash_Grotesk'] text-3xl font-normal"
+            href="https://www.linkedin.com/in/yarden-salansky"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            style={{ top: CONTACT_FIRST_TOP + CONTACT_LINE_GAP * 2 }}
             onPointerDown={(e) => e.stopPropagation()}
           >
-            +972527483331
+            Linkedin
+          </a>
+          <a
+            href="https://www.instagram.com/jordi.is.here"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            style={{ top: CONTACT_FIRST_TOP + CONTACT_LINE_GAP * 3 }}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            Instagram
           </a>
         </div>
       </div>
