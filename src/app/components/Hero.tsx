@@ -19,7 +19,7 @@ const HERO_H = 650;
 
 /** Shared size + padding for all hero CTAs. */
 const HERO_STONE_CTA_CLASS =
-  "pointer-events-auto flex h-16 shrink-0 cursor-pointer items-center justify-center border-0 bg-stone-100 px-6 py-4 font-['Clash_Grotesk'] text-2xl font-semibold leading-none tracking-wide text-black whitespace-nowrap";
+  "pointer-events-auto flex h-16 shrink-0 cursor-pointer items-center justify-center border-0 bg-stone-100 px-6 py-4 font-['Clash_Grotesk'] text-2xl font-semibold leading-none tracking-wider text-black whitespace-nowrap";
 
 export const Hero = React.forwardRef<HTMLDivElement, HeroProps>(function Hero(
   { onExplore, onPlay, onRestart: _onRestart, onAbout, isDarkMode: _isDarkMode },

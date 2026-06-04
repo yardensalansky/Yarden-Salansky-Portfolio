@@ -19,7 +19,6 @@ export default function TheOneDetiales({
       artboardHeight={CASE_STUDY_ARTBOARD.theOne}
       backgroundClassName="bg-[#DAD7DE]"
       scaledSurfaceClassName="bg-black"
-      footerBackgroundClassName="bg-[#DAD7DE]"
       embedScrollParent={embedScrollParent}
       onNextProject={onNextProject}
     >

@@ -89,7 +89,7 @@ export function Projects({ projects, onProjectClick, selectedProject, isDragging
                   style={{
                     fontSize: dynamicTitleSize,
                     fontWeight: 700,
-                    letterSpacing: '-0.02em',
+                    letterSpacing: '0.1em',
                     textShadow: '0 4px 20px rgba(0,0,0,0.5)',
                     maxWidth: '100%',
                     wordWrap: 'break-word',

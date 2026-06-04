@@ -12,6 +12,7 @@ export interface ScaledDesktopCaseStudyProps {
   embedScrollParent?: boolean;
   onNextProject?: () => void;
   footerBackgroundClassName?: string;
+  footerTextClassName?: string;
   children: ReactNode;
 }
 
@@ -27,12 +28,16 @@ export function ScaledDesktopCaseStudy({
   embedScrollParent = false,
   onNextProject,
   footerBackgroundClassName,
+  footerTextClassName,
   children,
 }: ScaledDesktopCaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const layoutW = artboardWidth + leftBleed;
   const surfaceClass = scaledSurfaceClassName ?? backgroundClassName;
+  const footerBg = footerBackgroundClassName ?? 'bg-black';
+  /** Match footer so no light seam appears between artboard and NEXT PROJECT. */
+  const stackBg = onNextProject ? footerBg : backgroundClassName;
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -48,12 +53,12 @@ export function ScaledDesktopCaseStudy({
   return (
     <div
       ref={containerRef}
-      className={`w-full min-h-0 overflow-x-hidden ${backgroundClassName} ${
+      className={`w-full min-h-0 overflow-x-hidden ${stackBg} ${
         embedScrollParent ? '' : 'h-full overflow-y-auto'
       }`}
     >
       <div
-        className={`relative shrink-0 ${backgroundClassName}`}
+        className={`relative shrink-0 ${stackBg}`}
         style={{
           width: layoutW * scale,
           height: artboardHeight * scale,
@@ -75,7 +80,9 @@ export function ScaledDesktopCaseStudy({
       {onNextProject ? (
         <NextProjectFooter
           onNextProject={onNextProject}
-          backgroundClassName={footerBackgroundClassName ?? backgroundClassName}
+          textClassName={footerTextClassName}
+          backgroundClassName={footerBg}
+          className="-mt-px"
         />
       ) : null}
     </div>

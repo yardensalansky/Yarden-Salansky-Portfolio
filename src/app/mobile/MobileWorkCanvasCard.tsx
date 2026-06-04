@@ -64,7 +64,7 @@ export function MobileWorkCanvasCard({ project, index, workW, workH, onSelect }:
             className="text-center font-['Clash_Grotesk',sans-serif] font-bold leading-[1.1] text-white"
             style={{
               fontSize: titlePx,
-              letterSpacing: '-0.02em',
+              letterSpacing: '0.1em',
               textShadow: '0 4px 20px rgba(0,0,0,0.5)',
               maxWidth: '100%',
               display: '-webkit-box',

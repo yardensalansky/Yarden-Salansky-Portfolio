@@ -33,8 +33,8 @@ export default function Frame297() {
         </div>
         <div className="pointer-events-none absolute inset-0 z-10 [transform:translate3d(0,0,1px)] [backface-visibility:hidden]">
           <div className="left-[36px] top-[335.41px] absolute justify-start drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
-            <span className="text-white text-6xl font-bold font-['Clash_Grotesk'] tracking-[3.90px]">WAR DIARY<br/></span>
-            <span className="text-white text-4xl font-medium font-['Clash_Grotesk'] tracking-widest">Shahar Dekel</span>
+            <span className="text-white text-6xl font-bold font-['Clash_Grotesk'] tracking-[5.2px]">WAR DIARY<br/></span>
+            <span className="text-white text-4xl font-medium font-['Clash_Grotesk'] tracking-[0.14em]">Shahar Dekel</span>
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ export default function Frame297() {
         />
       </div>
       <div className="w-[568px] left-[736px] top-[4133px] absolute inline-flex flex-col justify-start items-start">
-        <div className="self-stretch h-28 justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Design choice </div>
+        <div className="self-stretch h-28 justify-start text-black text-6xl font-semibold font-['Clash_Grotesk'] tracking-[0.12em]">Design choice </div>
         <div className="self-stretch min-h-[476px] justify-start text-black text-2xl font-normal font-['Satoshi']">
           To transform raw wartime documentation into an accessible digital archive, I designed a time based navigation
           system. The interface allows users to filter content chronologically (by months and specific dates) while
@@ -115,8 +115,8 @@ export default function Frame297() {
         The sequence of images and texts creates a quiet rhythm, where each spread becomes a fragment of a larger
         narrative.
       </div>
-      <div className="left-[36px] top-[7612px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Catalog </div>
-      <div className="left-[36px] top-[6195px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Full Website</div>
+      <div className="left-[36px] top-[7612px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk'] tracking-[0.12em]">Catalog </div>
+      <div className="left-[36px] top-[6195px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk'] tracking-[0.12em]">Full Website</div>
       <img className="w-[682.98px] h-[765.39px] left-[717px] top-[7168px] absolute object-cover" src={imgCatalog} alt="" />
       <div className="w-[1225px] h-[792px] left-[89px] top-[4864px] absolute bg-zinc-300 overflow-hidden">
         <video autoPlay muted loop playsInline className="size-full object-cover">

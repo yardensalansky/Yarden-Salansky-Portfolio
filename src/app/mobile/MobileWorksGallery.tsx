@@ -27,7 +27,7 @@ export function MobileWorksGallery({ workW, workH, isDarkMode, onSelectWork, exp
           Selected work
         </p>
         <h2
-          className={`mt-1 font-['Clash_Grotesk'] text-2xl font-semibold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}
+          className={`mt-1 font-['Clash_Grotesk'] text-2xl font-semibold tracking-[0.1em] ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}
         >
           Projects
         </h2>

@@ -19,16 +19,16 @@ export default function FrameTheOne() {
   return (
     <div className="relative h-[9936px] w-[1400px] overflow-hidden bg-black">
       <div className="absolute left-[-14px] top-[8619.86px] h-[822px] w-[1414px] bg-zinc-300" />
-      <div className="absolute left-[31px] top-[626.89px] inline-flex w-[1177.56px] flex-col items-start justify-start gap-16">
-        <div className="w-[1245px] justify-start">
-          <span className="font-['Satoshi'] text-5xl font-bold leading-[60.50px] tracking-[5px] text-white">
-            The One is not a collection. It is a decision.{' '}
-          </span>
-          <span className="font-['Satoshi'] text-3xl font-normal leading-9 tracking-[3px] text-white">
-            A conceptual luxury e-commerce experience inspired by Anna Wintour.
-          </span>
+      {/* Intro + metadata: same layout as Kite Runner (504px hero → 863px shell). */}
+      <div className="absolute left-[31px] top-[504px] box-border flex h-[359px] w-[1159.52px] flex-col pb-[10px]">
+        <div className="min-h-0 flex-1" aria-hidden />
+        <div className="shrink-0 self-stretch justify-start font-['Satoshi'] text-5xl font-bold leading-[51.5px] text-white">
+          The One is not a collection. It is a&nbsp;decision.
+          <br />
+          A conceptual luxury e-commerce experience inspired by Anna&nbsp;Wintour.
         </div>
-        <div className="inline-flex items-center justify-start gap-20">
+        <div className="min-h-0 flex-1" aria-hidden />
+        <div className="inline-flex shrink-0 -translate-y-[10px] items-center justify-start gap-20">
           <div className="inline-flex w-24 flex-col items-start justify-start gap-4">
             <div className="justify-start self-stretch font-['Satoshi'] text-2xl font-bold text-neutral-500">YEAR</div>
             <div className="justify-start self-stretch font-['Satoshi'] text-3xl font-black text-white">2026</div>
@@ -47,19 +47,19 @@ export default function FrameTheOne() {
           </div>
         </div>
       </div>
-      <div className="absolute left-[672px] top-[1208px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-white">
+      <div className="absolute left-[672px] top-[1208px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-white">
         Concept
       </div>
-      <div className="absolute left-[31px] top-[3001px] justify-start font-['Clash_Grotesk'] text-6xl font-bold text-white">
+      <div className="absolute left-[31px] top-[3001px] justify-start font-['Clash_Grotesk'] text-6xl font-bold tracking-[0.12em] text-white">
         Experience
       </div>
-      <div className="absolute left-[715px] top-[4001px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-white">
+      <div className="absolute left-[715px] top-[4001px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-white">
         Visual Language
       </div>
-      <div className="absolute left-[31px] top-[7120.86px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-white">
+      <div className="absolute left-[31px] top-[7120.86px] z-10 justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-white">
         Interaction
       </div>
-      <div className="absolute left-[31px] top-[8664.86px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-black">
+      <div className="absolute left-[31px] top-[8664.86px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-black">
         The Edition{' '}
       </div>
       <div className="absolute left-[117px] top-[9629px] w-[1167px] justify-start text-center font-['Clash_Grotesk'] text-5xl font-semibold text-white">
@@ -111,7 +111,7 @@ export default function FrameTheOne() {
         <br />
         The repeated form suggests that iconic presence is not inherent but assigned.
       </div>
-      <div className="absolute left-[31px] top-[7216.86px] w-[638px] justify-start font-['Satoshi'] text-[25px] font-normal leading-normal text-white">
+      <div className="absolute left-[31px] top-[7216.86px] z-10 w-[638px] justify-start font-['Satoshi'] text-[25px] font-normal leading-normal text-white">
         The experience unfolds as a structured purchase journey from a single product selection to guided steps of
         customization and measurement.
         <br />
@@ -120,14 +120,14 @@ export default function FrameTheOne() {
         <br />
         The outcome is binary, accepted or rejected, reinforcing a system of control and exclusivity.
       </div>
-      <div className="pointer-events-none absolute left-[27px] top-[7434px] flex h-[540px] w-[1357px] items-center justify-center bg-black">
+      <div className="pointer-events-none absolute left-[27px] top-[7434px] z-0 flex h-[540px] w-[1357px] items-center justify-center bg-black">
         <img
           alt=""
           src={imgInteractionFlow}
           className="max-h-full max-w-full object-contain object-center"
         />
       </div>
-      <div className="absolute left-[265px] top-[7982px] w-48 justify-start font-['Satoshi'] text-2xl font-bold text-white">
+      <div className="absolute left-[265px] top-[7982px] z-10 w-48 justify-start font-['Satoshi'] text-2xl font-bold text-white">
         Real live camera
       </div>
       <div className="absolute left-[31px] top-[8762.86px] w-[638px] justify-start font-['Satoshi'] text-2xl font-normal text-black">
@@ -215,7 +215,7 @@ export default function FrameTheOne() {
       </div>
       <div className="absolute left-[1223px] top-[5731.2px] h-24 w-72 origin-top-left -rotate-90 bg-orange-300" />
       <div className="absolute left-[1314px] top-[5731.2px] h-24 w-72 origin-top-left -rotate-90 bg-red-700" />
-      <div className="absolute left-[31px] top-[4925px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-white">
+      <div className="absolute left-[31px] top-[4925px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-white">
         Style Guide
       </div>
       <div className="absolute left-[31px] top-[6049px] justify-start font-['Satoshi'] text-[25px] font-normal leading-normal text-white">
@@ -228,7 +228,7 @@ export default function FrameTheOne() {
       />
       <video
         aria-hidden={true}
-        className="pointer-events-none absolute left-[261px] top-[8026px] h-[518.44px] w-[851px] object-cover object-center"
+        className="pointer-events-none absolute left-[261px] top-[8026px] z-0 h-[518.44px] w-[851px] object-cover object-center"
         src={CLOUDINARY_VIDEOS.the_one_cover}
         autoPlay
         loop
@@ -256,7 +256,7 @@ export default function FrameTheOne() {
             className="pointer-events-none absolute left-0 top-[-198px] h-[899px] w-[1396px] max-w-none object-cover"
           />
         </div>
-        <div className="absolute left-[31px] top-[386px] w-[549px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[3.60px] text-white">
+        <div className="absolute left-[31px] top-[386px] w-[549px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[4.8px] text-white">
           (the) ONE
         </div>
       </div>

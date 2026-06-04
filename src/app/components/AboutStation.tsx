@@ -77,14 +77,14 @@ export function AboutStation({ onClose, isDarkMode: _isDarkMode }: AboutStationP
         <div className="relative h-full w-full" style={{ color: FG }}>
           <div
             id="about-station-title"
-            className="absolute left-[36px] w-[543px] justify-start font-['Clash_Grotesk'] tracking-[0.06em]"
+            className="absolute left-[36px] w-[543px] justify-start font-['Clash_Grotesk'] tracking-[0.1em]"
             style={{ top: ABOUT_CARD_PAD }}
           >
-            <span className="text-5xl font-semibold tracking-[0.05em]">
+            <span className="text-5xl font-semibold tracking-[0.1em]">
               Hi, I&apos;m Yarden
               <br />
             </span>
-            <span className="text-3xl font-normal tracking-[0.08em]">
+            <span className="text-3xl font-normal tracking-[0.12em]">
               {' '}
               A Product Designer &amp; Developer who enjoys building tools and systems that improve and rethink
               the way we work.
@@ -95,14 +95,14 @@ export function AboutStation({ onClose, isDarkMode: _isDarkMode }: AboutStationP
           </div>
 
           <div
-            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-semibold tracking-[0.1em]"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-semibold tracking-[0.14em]"
             style={{ top: CONTACT_HEADER_TOP }}
           >
             GET IN TOUCH
           </div>
           <a
             href="tel:+972527483331"
-            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.12em] hover:opacity-80"
             style={{ top: CONTACT_FIRST_TOP }}
             onPointerDown={(e) => e.stopPropagation()}
           >
@@ -110,7 +110,7 @@ export function AboutStation({ onClose, isDarkMode: _isDarkMode }: AboutStationP
           </a>
           <a
             href="mailto:yardensal4@gmail.com"
-            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.12em] hover:opacity-80"
             style={{ top: CONTACT_FIRST_TOP + CONTACT_LINE_GAP }}
             onPointerDown={(e) => e.stopPropagation()}
           >
@@ -120,7 +120,7 @@ export function AboutStation({ onClose, isDarkMode: _isDarkMode }: AboutStationP
             href="https://www.linkedin.com/in/yarden-salansky"
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.12em] hover:opacity-80"
             style={{ top: CONTACT_FIRST_TOP + CONTACT_LINE_GAP * 2 }}
             onPointerDown={(e) => e.stopPropagation()}
           >
@@ -130,7 +130,7 @@ export function AboutStation({ onClose, isDarkMode: _isDarkMode }: AboutStationP
             href="https://www.instagram.com/jordi.is.here"
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.08em] hover:opacity-80"
+            className="absolute left-[36px] justify-start font-['Clash_Grotesk'] text-3xl font-normal tracking-[0.12em] hover:opacity-80"
             style={{ top: CONTACT_FIRST_TOP + CONTACT_LINE_GAP * 3 }}
             onPointerDown={(e) => e.stopPropagation()}
           >

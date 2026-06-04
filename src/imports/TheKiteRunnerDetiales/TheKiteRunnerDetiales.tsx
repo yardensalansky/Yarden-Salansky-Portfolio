@@ -68,7 +68,7 @@ export default function TheKiteRunnerDetiales() {
         </div>
       </div>
 
-      <div className="absolute left-[31px] top-[1517px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-black">
+      <div className="absolute left-[31px] top-[1517px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-black">
         Inspiration
       </div>
       <div className="absolute left-[-10px] top-[1957px] z-[1] h-[524px] w-[1420px] overflow-hidden bg-black">
@@ -78,18 +78,18 @@ export default function TheKiteRunnerDetiales() {
           alt=""
         />
       </div>
-      <div className="absolute left-[31px] top-[2570px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-black">
+      <div className="absolute left-[31px] top-[2570px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-black">
         Concept
       </div>
       <div className="absolute left-[825px] top-[3487px] justify-start">
-        <span className="font-['Clash_Grotesk'] text-6xl font-semibold text-black">Experience</span>
+        <span className="font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-black">Experience</span>
         <span className="font-['Roboto'] text-6xl font-extrabold text-black"> </span>
       </div>
 
-      <div className="absolute left-[31px] top-[3943px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-black">
+      <div className="absolute left-[31px] top-[3943px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-black">
         Style frames
       </div>
-      <div className="absolute left-[31px] top-[5235px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold text-black">
+      <div className="absolute left-[31px] top-[5235px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-black">
         Final Video
       </div>
 

@@ -34,11 +34,11 @@ function MobileWarDiaryArtboard() {
     <div className="relative overflow-hidden bg-white" style={{ width: W, height: H }}>
       <div className="absolute left-0 top-0 h-60 w-96 overflow-hidden bg-zinc-300">
         <div className="absolute left-[11px] top-[170px] justify-start drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)]">
-          <span className="font-['Clash_Grotesk'] text-3xl font-bold tracking-widest text-white">
+          <span className="font-['Clash_Grotesk'] text-3xl font-bold tracking-[0.2em] text-white">
             WAR DIARY
             <br />
           </span>
-          <span className="font-['Clash_Grotesk'] text-lg font-medium tracking-wide text-white">Shahar Dekel</span>
+          <span className="font-['Clash_Grotesk'] text-lg font-medium tracking-[0.14em] text-white">Shahar Dekel</span>
         </div>
       </div>
 
@@ -103,7 +103,7 @@ function MobileWarDiaryArtboard() {
       />
 
       <div className="absolute left-[8px] top-[2253px] inline-flex w-96 flex-col items-start justify-start">
-        <div className="h-16 self-stretch justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
+        <div className="h-16 self-stretch justify-start font-['Clash_Grotesk'] text-4xl font-semibold tracking-[0.12em] text-black">
           Design choice{' '}
         </div>
         <div className="min-h-80 self-stretch justify-start font-['Satoshi'] text-base font-normal text-black">
@@ -120,7 +120,7 @@ function MobileWarDiaryArtboard() {
       {/* Wireframe: empty zinc band only (no image). */}
       <div className="absolute left-[-19px] top-[2691px] h-72 w-96 bg-zinc-300" aria-hidden />
 
-      <div className="absolute left-[92.16px] top-[2805.39px] justify-start font-['Clash_Grotesk'] text-2xl font-bold text-black">
+      <div className="absolute left-[92.16px] top-[2805.39px] justify-start font-['Clash_Grotesk'] text-2xl font-bold tracking-[0.12em] text-black">
         wardiary_video1.mp4
       </div>
 
@@ -145,7 +145,7 @@ function MobileWarDiaryArtboard() {
         loading="lazy"
       />
 
-      <div className="absolute left-[11px] top-[4344px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
+      <div className="absolute left-[11px] top-[4344px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold tracking-[0.12em] text-black">
         Catalog{' '}
       </div>
 
@@ -159,14 +159,14 @@ function MobileWarDiaryArtboard() {
 
       <img className="absolute left-0 top-[4584px] h-80 w-96 object-cover" src={imgCatalog} alt="" loading="lazy" />
 
-      <div className="absolute left-[11px] top-[3742px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
+      <div className="absolute left-[11px] top-[3742px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold tracking-[0.12em] text-black">
         Full Website
       </div>
 
       {/* Wireframe: empty zinc only, no video. */}
       <div className="absolute left-0 top-[3818px] h-64 w-96 bg-zinc-300" aria-hidden />
 
-      <div className="absolute left-[79px] top-[3935px] justify-start font-['Clash_Grotesk'] text-xl font-bold text-black">
+      <div className="absolute left-[79px] top-[3935px] justify-start font-['Clash_Grotesk'] text-xl font-bold tracking-[0.12em] text-black">
         wardiary_video22-2.mp4
       </div>
     </div>

@@ -20,7 +20,7 @@ export function MobileWorksStack({ onSelect, isDarkMode }: MobileWorksStackProps
           Selected work
         </p>
         <h2
-          className={`mt-1 font-['Clash_Grotesk'] text-3xl font-semibold ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}
+          className={`mt-1 font-['Clash_Grotesk'] text-3xl font-semibold tracking-[0.1em] ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}
         >
           Projects
         </h2>
@@ -62,7 +62,7 @@ export function MobileWorksStack({ onSelect, isDarkMode }: MobileWorksStackProps
               </div>
               <div className="flex items-center justify-between gap-3 px-4 py-4">
                 <span
-                  className={`font-['Clash_Grotesk'] text-xl font-semibold tracking-tight ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}
+                  className={`font-['Clash_Grotesk'] text-xl font-semibold tracking-[0.1em] ${isDarkMode ? 'text-white' : 'text-neutral-900'}`}
                 >
                   {p.title}
                 </span>
