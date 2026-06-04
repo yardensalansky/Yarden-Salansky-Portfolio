@@ -53,7 +53,7 @@ export function ProjectDetail({ project, onNextProject }: ProjectDetailProps) {
       );
     case 'proj4':
       return (
-        <CaseStudyDetailShell backgroundColor="#DAD7DE">
+        <CaseStudyDetailShell backgroundColor="#000000">
           <TheOneDetiales onNextProject={onNextProject} />
         </CaseStudyDetailShell>
       );

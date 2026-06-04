@@ -229,9 +229,9 @@ export function MobileApp() {
   const handleNextProject = useCallback(async () => {
     if (!detailId) return;
     const currentIndex = MOBILE_PROJECTS.findIndex((p) => p.id === detailId);
-    if (currentIndex < 0 || currentIndex >= MOBILE_PROJECTS.length - 1) return;
+    if (currentIndex < 0) return;
 
-    const nextId = MOBILE_PROJECTS[currentIndex + 1]!.id;
+    const nextId = MOBILE_PROJECTS[(currentIndex + 1) % MOBILE_PROJECTS.length]!.id;
 
     panAbortRef.current?.abort();
     const ac = new AbortController();
@@ -384,12 +384,7 @@ export function MobileApp() {
                           <MobileCanvasProjectDetail
                             projectId={detailId}
                             onClose={closeDetail}
-                            onNextProject={
-                              MOBILE_PROJECTS.findIndex((p) => p.id === detailId) <
-                              MOBILE_PROJECTS.length - 1
-                                ? handleNextProject
-                                : undefined
-                            }
+                            onNextProject={handleNextProject}
                           />
                         </motion.div>
                       )}

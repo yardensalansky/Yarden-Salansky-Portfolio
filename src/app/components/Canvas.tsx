@@ -1345,9 +1345,9 @@ export function Canvas() {
   const handleNextProject = useCallback(() => {
     if (!selectedProject || projectNavTransitionRef.current) return;
     const currentIndex = projects.findIndex((p) => p.id === selectedProject.id);
-    if (currentIndex < 0 || currentIndex >= projects.length - 1) return;
+    if (currentIndex < 0) return;
 
-    const nextIndex = currentIndex + 1;
+    const nextIndex = (currentIndex + 1) % projects.length;
     const nextProject = projects[nextIndex];
 
     projectNavTransitionRef.current = true;
@@ -1765,9 +1765,7 @@ export function Canvas() {
               <ProjectDetail
                 project={selectedProject}
                 isDarkMode={isDarkMode}
-                onNextProject={
-                  selectedProjectIndex < projects.length - 1 ? handleNextProject : undefined
-                }
+                onNextProject={handleNextProject}
               />
             </div>
           )}

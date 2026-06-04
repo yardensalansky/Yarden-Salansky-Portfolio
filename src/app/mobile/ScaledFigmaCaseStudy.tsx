@@ -22,7 +22,7 @@ export function ScaledFigmaCaseStudy({
   innerClassName = 'bg-white',
   onNextProject,
   footerBackgroundClassName,
-  footerTextClassName = 'text-2xl',
+  footerTextClassName = 'text-2xl text-white',
 }: ScaledFigmaCaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -38,8 +38,10 @@ export function ScaledFigmaCaseStudy({
     return () => ro.disconnect();
   }, [designWidth]);
 
+  const footerBg = footerBackgroundClassName ?? 'bg-black';
+
   return (
-    <div className="flex w-full flex-col">
+    <div className={`flex w-full flex-col ${onNextProject ? footerBg : ''}`}>
       <div ref={containerRef} className="w-full min-w-0 overflow-x-hidden">
         <div
           className={`relative shrink-0 ${innerClassName}`}
@@ -65,7 +67,8 @@ export function ScaledFigmaCaseStudy({
         <NextProjectFooter
           onNextProject={onNextProject}
           textClassName={footerTextClassName}
-          backgroundClassName={footerBackgroundClassName ?? innerClassName}
+          backgroundClassName={footerBg}
+          className="-mt-px"
         />
       ) : null}
     </div>
