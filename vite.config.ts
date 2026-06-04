@@ -1,7 +1,20 @@
-import { defineConfig } from 'vite' 
-import path from 'path' 
-import tailwindcss from '@tailwindcss/vite' 
-import react from '@vitejs/plugin-react' 
+import { copyFileSync, writeFileSync } from 'fs'
+import path from 'path'
+import { defineConfig, type Plugin } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+
+/** GitHub Pages: disable Jekyll and SPA fallback via 404.html */
+function githubPagesPlugin(): Plugin {
+  return {
+    name: 'github-pages',
+    closeBundle() {
+      const dist = path.resolve(__dirname, 'dist')
+      copyFileSync(path.join(dist, 'index.html'), path.join(dist, '404.html'))
+      writeFileSync(path.join(dist, '.nojekyll'), '')
+    },
+  }
+} 
 
 function figmaAssetFallbackPlugin() { 
   const PREFIX = 'figma:asset/' 
@@ -25,11 +38,16 @@ function figmaAssetFallbackPlugin() {
 
 export default defineConfig({ 
   base: '/Yarden-Salansky-Portfolio/', 
-  plugins: [ 
-    react(), 
-    tailwindcss(), 
-    figmaAssetFallbackPlugin(), 
-  ], 
+  plugins: [
+    react(),
+    tailwindcss(),
+    figmaAssetFallbackPlugin(),
+    githubPagesPlugin(),
+  ],
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+  }, 
   resolve: { 
     alias: { 
       '@': path.resolve(__dirname, './src'), 
