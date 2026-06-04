@@ -53,7 +53,7 @@ export default function TheKiteRunnerDetiales() {
           <div className="inline-flex w-64 flex-col items-start justify-start gap-4">
             <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">CLIENT</div>
             <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">
-              Studential Project{' '}
+              Student Project{' '}
             </div>
           </div>
           <div className="inline-flex w-72 flex-col items-start justify-start gap-4">

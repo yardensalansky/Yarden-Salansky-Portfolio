@@ -29,7 +29,7 @@ export const MOBILE_PROJECTS: MobileProjectMeta[] = [
     coverVideo: V.wardiary_cover,
     subtitle: 'Shahar Dekel',
     year: '2025',
-    client: 'Studential Project',
+    client: 'Student Project',
     designField: 'Web & Print',
     introParagraphs: [
       'War Diary is an archival project based on photographs and texts by Shahar Dekel, a reserve tank soldier during the early stages of the Iron Swords War.',
@@ -43,7 +43,7 @@ export const MOBILE_PROJECTS: MobileProjectMeta[] = [
     coverImage: C['aweather-bg-right'],
     subtitle: 'Student project',
     year: '2026',
-    client: 'Studential Project',
+    client: 'Student Project',
     designField: 'App',
     introParagraphs: [
       'A weather app inspired by Anna Wintour — designed to give clear direction instead of raw data.',
@@ -56,7 +56,7 @@ export const MOBILE_PROJECTS: MobileProjectMeta[] = [
     coverImage: C.thekiterunner_bg,
     subtitle: 'Opening sequence',
     year: '2026',
-    client: 'Studential Project',
+    client: 'Student Project',
     designField: 'Motion',
     introParagraphs: [
       'An opening sequence for a series adaptation — visual language drawn from Afghan ceramic tilework: order, beauty, then erosion and memory.',
@@ -69,7 +69,7 @@ export const MOBILE_PROJECTS: MobileProjectMeta[] = [
     coverImage: C['e082e465b1c842283a9dff49617174df4bc97f7d'],
     subtitle: 'Concept e-commerce',
     year: '2026',
-    client: 'Studential Project',
+    client: 'Student Project',
     designField: 'Website',
     introParagraphs: [
       'The One is not a collection. It is a decision. A conceptual luxury e-commerce experience inspired by Anna Wintour — built around a single product and a gatekeeper logic.',

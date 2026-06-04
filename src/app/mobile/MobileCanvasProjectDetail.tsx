@@ -27,18 +27,30 @@ function CaseStudyBody({
       return <MobileWarDiaryDetail onNextProject={onNextProject} />;
     case 'proj2':
       return (
-        <ScaledFigmaCaseStudy designWidth={1400} designHeight={9343.56} innerClassName="bg-white">
+        <ScaledFigmaCaseStudy
+          designWidth={1400}
+          designHeight={9343.56}
+          innerClassName="bg-white"
+          onNextProject={onNextProject}
+        >
           <AWeatherDetials />
         </ScaledFigmaCaseStudy>
       );
     case 'proj3':
       return (
-        <ScaledFigmaCaseStudy designWidth={1400} designHeight={6316} innerClassName="bg-white">
+        <ScaledFigmaCaseStudy
+          designWidth={1400}
+          designHeight={6316}
+          innerClassName="bg-white"
+          onNextProject={onNextProject}
+        >
           <KiteRunnerDetails />
         </ScaledFigmaCaseStudy>
       );
     case 'proj4':
-      return <TheOneDetiales embedScrollParent={embedScrollParent} />;
+      return (
+        <TheOneDetiales embedScrollParent={embedScrollParent} onNextProject={onNextProject} />
+      );
     default:
       return null;
   }

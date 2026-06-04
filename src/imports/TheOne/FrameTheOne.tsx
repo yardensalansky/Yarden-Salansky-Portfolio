@@ -36,7 +36,7 @@ export default function FrameTheOne() {
           <div className="inline-flex w-72 flex-col items-start justify-start gap-4">
             <div className="justify-start self-stretch font-['Satoshi'] text-2xl font-bold text-neutral-500">CLIENT</div>
             <div className="justify-start self-stretch font-['Satoshi'] text-3xl font-black text-white">
-              Studential Project{' '}
+              Student Project{' '}
             </div>
           </div>
           <div className="inline-flex w-80 flex-col items-start justify-start gap-4">

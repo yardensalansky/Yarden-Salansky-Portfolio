@@ -488,10 +488,10 @@ export function Canvas() {
   const detailWidth = 1400; // 2x scale
   /** Slightly shorter than 2×450 so the canvas peeks past the bottom of the detail card. */
   const detailHeight = 848;
-  /** War Diary detail shell: extra height at the bottom only (top / marginTop unchanged). */
-  const WAR_DIARY_DETAIL_EXTRA_BOTTOM_PX = 15;
-  /** Nudge War Diary detail framing down on screen (viewport px). */
-  const WAR_DIARY_CARD_OFFSET_DOWN_PX = 10;
+  /** Detail shell: extra height at the bottom only (top / marginTop unchanged). */
+  const DETAIL_EXTRA_BOTTOM_PX = 15;
+  /** Nudge detail framing down on screen (viewport px). */
+  const DETAIL_CARD_OFFSET_DOWN_PX = 10;
 
   /** Space between stacked project cards (vertical + horizontal rhythm when using flex gap). */
   const CARD_GAP = 60;
@@ -543,10 +543,9 @@ export function Canvas() {
     ? projects.findIndex((p) => p.id === selectedProject.id)
     : -1;
 
-  const activeDetailHeight =
-    selectedProject?.id === 'proj1'
-      ? detailHeight + WAR_DIARY_DETAIL_EXTRA_BOTTOM_PX
-      : detailHeight;
+  const activeDetailHeight = selectedProject
+    ? detailHeight + DETAIL_EXTRA_BOTTOM_PX
+    : detailHeight;
 
   const LAYOUT_MARGIN = 40;
   const MIN_ROW_SCALE = 0.22;
@@ -1155,15 +1154,12 @@ export function Canvas() {
     }
 
     const detailIdealWidth = (DETAIL_VIEW_FRAC * vw) / (detailWidth * rowScale);
-    const panelDetailHeight =
-      selectedProject?.id === 'proj1'
-        ? detailHeight + WAR_DIARY_DETAIL_EXTRA_BOTTOM_PX
-        : detailHeight;
+    const panelDetailHeight = selectedProject
+      ? detailHeight + DETAIL_EXTRA_BOTTOM_PX
+      : detailHeight;
     const detailIdealHeight = (DETAIL_VIEW_FRAC * vh) / (panelDetailHeight * rowScale);
     const ideal = selectedProject
-      ? selectedProject.id === 'proj1'
-        ? detailIdealHeight
-        : Math.min(detailIdealWidth, detailIdealHeight)
+      ? detailIdealHeight
       : Math.min(
           (WORKS_CARD_VIEW_FRAC * vw) / (projectWidth * rowScale),
           (WORKS_CARD_VIEW_FRAC * vh) / (projectHeight * rowScale),
@@ -1205,41 +1201,22 @@ export function Canvas() {
         ease,
       });
     } else if (selectedProjectIndex !== -1) {
-      let camX: number;
-      let camY: number;
-      if (selectedProject?.id === 'proj1') {
-        ({ camX, camY } = computeDetailPanelCenterCamera({
-          z: targetZ,
-          vw,
-          vh,
-          rowScale,
-          scaleOriginX,
-          scaleOriginY,
-          detailColumnLeft,
-          detailWidth,
-          worksTop,
-          projectStride,
-          detailRowIndex: selectedProjectIndex,
-          detailHeight: panelDetailHeight,
-          viewportCenterY: vh / 2,
-        }));
-        camY += WAR_DIARY_CARD_OFFSET_DOWN_PX;
-      } else {
-        ({ camX, camY } = computeDetailPanelCamera({
-          z: targetZ,
-          vw,
-          vh,
-          rowScale,
-          scaleOriginX,
-          scaleOriginY,
-          detailColumnLeft,
-          detailWidth,
-          worksTop,
-          projectStride,
-          detailRowIndex: selectedProjectIndex,
-          detailTopInsetPx: CONTENT_TOP_BELOW_LOGO_PX,
-        }));
-      }
+      const { camX, camY: camYBase } = computeDetailPanelCenterCamera({
+        z: targetZ,
+        vw,
+        vh,
+        rowScale,
+        scaleOriginX,
+        scaleOriginY,
+        detailColumnLeft,
+        detailWidth,
+        worksTop,
+        projectStride,
+        detailRowIndex: selectedProjectIndex,
+        detailHeight: panelDetailHeight,
+        viewportCenterY: vh / 2,
+      });
+      const camY = camYBase + DETAIL_CARD_OFFSET_DOWN_PX;
       worksCameraXAnimRef.current = animate(cameraX, camX, {
         duration,
         ease,
@@ -1789,9 +1766,7 @@ export function Canvas() {
                 project={selectedProject}
                 isDarkMode={isDarkMode}
                 onNextProject={
-                  selectedProject.id === 'proj1' && selectedProjectIndex < projects.length - 1
-                    ? handleNextProject
-                    : undefined
+                  selectedProjectIndex < projects.length - 1 ? handleNextProject : undefined
                 }
               />
             </div>

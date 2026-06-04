@@ -3,20 +3,25 @@ import React from 'react';
 export default function AWeatherDetials() {
   return (
     <div className="relative h-[9343.56px] w-[1400px] max-w-full min-w-0 overflow-hidden bg-white">
-      <div className="w-[1177.56px] left-[31px] top-[626.89px] absolute inline-flex flex-col justify-start items-start gap-16">
-        <div className="self-stretch justify-start text-black text-5xl font-bold font-['Satoshi'] leading-[51.50px]">A weather app inspired by Anna Wintour, designed to give clear direction instead of data.</div>
-        <div className="inline-flex justify-start items-center gap-20">
-          <div className="w-24 inline-flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">YEAR</div>
-            <div className="self-stretch justify-start text-black text-3xl font-black font-['Satoshi']">2026</div>
+      {/* Intro + metadata: flush under 504px hero; equal space above/below headline; 10px above shell bottom (863px). */}
+      <div className="absolute left-[31px] top-[504px] box-border flex h-[359px] w-[1177.56px] flex-col pb-[10px]">
+        <div className="min-h-0 flex-1" aria-hidden />
+        <div className="shrink-0 self-stretch justify-start font-['Satoshi'] text-5xl font-bold leading-[51.50px] text-black">
+          A weather app inspired by Anna Wintour, designed to give clear direction instead of data.
+        </div>
+        <div className="min-h-0 flex-1" aria-hidden />
+        <div className="inline-flex shrink-0 items-center justify-start gap-20">
+          <div className="w-24 inline-flex flex-col items-start justify-start gap-4">
+            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">YEAR</div>
+            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">2026</div>
           </div>
-          <div className="w-72 inline-flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">CLIENT</div>
-            <div className="self-stretch justify-start text-black text-3xl font-black font-['Satoshi']">Studential Project </div>
+          <div className="w-72 inline-flex flex-col items-start justify-start gap-4">
+            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">CLIENT</div>
+            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">Student Project </div>
           </div>
-          <div className="w-80 inline-flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">DESIGHN FIELD </div>
-            <div className="self-stretch justify-start text-black text-3xl font-black font-['Satoshi']">App </div>
+          <div className="w-80 inline-flex flex-col items-start justify-start gap-4">
+            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">DESIGN FIELD </div>
+            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">App </div>
           </div>
         </div>
       </div>

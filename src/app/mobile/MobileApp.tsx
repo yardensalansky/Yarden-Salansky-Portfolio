@@ -385,7 +385,8 @@ export function MobileApp() {
                             projectId={detailId}
                             onClose={closeDetail}
                             onNextProject={
-                              detailId === 'proj1'
+                              MOBILE_PROJECTS.findIndex((p) => p.id === detailId) <
+                              MOBILE_PROJECTS.length - 1
                                 ? handleNextProject
                                 : undefined
                             }

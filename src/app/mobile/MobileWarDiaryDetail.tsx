@@ -58,7 +58,7 @@ function MobileWarDiaryArtboard() {
         </div>
         <div className="flex w-40 flex-col items-start justify-start gap-2.5">
           <div className="self-stretch justify-start font-['Satoshi'] text-base font-bold text-neutral-500">CLIENT</div>
-          <div className="w-48 justify-start font-['Satoshi'] text-lg font-black text-black">Studential Project </div>
+          <div className="w-48 justify-start font-['Satoshi'] text-lg font-black text-black">Student Project </div>
         </div>
         <div className="flex w-48 flex-col items-start justify-start gap-2.5">
           <div className="self-stretch justify-start font-['Satoshi'] text-base font-bold text-neutral-500">
@@ -173,32 +173,15 @@ function MobileWarDiaryArtboard() {
   );
 }
 
-function NextProjectFooter({ onNextProject }: { onNextProject: () => void }) {
-  return (
-    <div className="flex w-full shrink-0 justify-center bg-white py-10">
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          onNextProject();
-        }}
-        onPointerDown={(e) => e.stopPropagation()}
-        className="cursor-pointer border-0 bg-transparent font-['Clash_Grotesk'] text-2xl font-semibold tracking-wide text-black transition-opacity hover:opacity-60 touch-manipulation"
-      >
-        NEXT PROJECT &gt;&gt;
-      </button>
-    </div>
-  );
-}
-
 export function MobileWarDiaryDetail({ onNextProject }: { onNextProject?: () => void }) {
   return (
-    <div className="flex w-full flex-col bg-white">
-      <ScaledFigmaCaseStudy designWidth={W} designHeight={H} innerClassName="bg-white">
-        <MobileWarDiaryArtboard />
-      </ScaledFigmaCaseStudy>
-      {onNextProject ? <NextProjectFooter onNextProject={onNextProject} /> : null}
-    </div>
+    <ScaledFigmaCaseStudy
+      designWidth={W}
+      designHeight={H}
+      innerClassName="bg-white"
+      onNextProject={onNextProject}
+    >
+      <MobileWarDiaryArtboard />
+    </ScaledFigmaCaseStudy>
   );
 }

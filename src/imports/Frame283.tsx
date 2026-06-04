@@ -28,7 +28,7 @@ function Frame46() {
       <p className="font-['Roboto:Medium',sans-serif] font-medium relative shrink-0 text-[#797979] text-[15px] w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>
         CLIENT
       </p>
-      <p className="font-['Roboto:ExtraBold',sans-serif] font-extrabold relative shrink-0 text-[20px] text-black w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>{`Studential Project `}</p>
+      <p className="font-['Roboto:ExtraBold',sans-serif] font-extrabold relative shrink-0 text-[20px] text-black w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>{`Student Project `}</p>
     </div>
   );
 }

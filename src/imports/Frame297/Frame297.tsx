@@ -56,7 +56,7 @@ export default function Frame297() {
           </div>
           <div className="w-72 inline-flex flex-col justify-start items-start gap-4">
             <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">CLIENT</div>
-            <div className="w-80 justify-start text-black text-3xl font-black font-['Satoshi']">Studential Project </div>
+            <div className="w-80 justify-start text-black text-3xl font-black font-['Satoshi']">Student Project </div>
           </div>
           <div className="w-80 inline-flex flex-col justify-start items-start gap-4">
             <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">DESIGN FIELD </div>

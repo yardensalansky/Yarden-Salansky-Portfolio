@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { NextProjectFooter } from '../components/caseStudy/NextProjectFooter';
 
 interface ScaledFigmaCaseStudyProps {
   designWidth: number;
@@ -6,6 +7,9 @@ interface ScaledFigmaCaseStudyProps {
   children: ReactNode;
   /** Applied to the scaled wrapper (matches artboard background). */
   innerClassName?: string;
+  onNextProject?: () => void;
+  footerBackgroundClassName?: string;
+  footerTextClassName?: string;
 }
 
 /**
@@ -16,6 +20,9 @@ export function ScaledFigmaCaseStudy({
   designHeight,
   children,
   innerClassName = 'bg-white',
+  onNextProject,
+  footerBackgroundClassName,
+  footerTextClassName = 'text-2xl',
 }: ScaledFigmaCaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -32,26 +39,35 @@ export function ScaledFigmaCaseStudy({
   }, [designWidth]);
 
   return (
-    <div ref={containerRef} className="w-full min-w-0 overflow-x-hidden">
-      <div
-        className={`relative shrink-0 ${innerClassName}`}
-        style={{
-          width: designWidth * scale,
-          height: designHeight * scale,
-        }}
-      >
+    <div className="flex w-full flex-col">
+      <div ref={containerRef} className="w-full min-w-0 overflow-x-hidden">
         <div
-          className={`absolute left-0 top-0 ${innerClassName}`}
+          className={`relative shrink-0 ${innerClassName}`}
           style={{
-            width: designWidth,
-            height: designHeight,
-            transform: `scale(${scale})`,
-            transformOrigin: 'top left',
+            width: designWidth * scale,
+            height: designHeight * scale,
           }}
         >
-          {children}
+          <div
+            className={`absolute left-0 top-0 ${innerClassName}`}
+            style={{
+              width: designWidth,
+              height: designHeight,
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left',
+            }}
+          >
+            {children}
+          </div>
         </div>
       </div>
+      {onNextProject ? (
+        <NextProjectFooter
+          onNextProject={onNextProject}
+          textClassName={footerTextClassName}
+          backgroundClassName={footerBackgroundClassName ?? innerClassName}
+        />
+      ) : null}
     </div>
   );
 }

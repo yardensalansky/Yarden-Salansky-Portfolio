@@ -51,7 +51,7 @@ function Frame2() {
         CLIENT
       </p>
       <p className="font-['Roboto:ExtraBold',sans-serif] font-extrabold relative shrink-0 text-[16.377px] text-black w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>
-        Studential Project
+        Student Project
       </p>
     </div>
   );
