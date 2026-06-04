@@ -17,9 +17,10 @@ interface Project {
 interface ProjectDetailProps {
   project: Project;
   isDarkMode: boolean;
+  onNextProject?: () => void;
 }
 
-export function ProjectDetail({ project, isDarkMode }: ProjectDetailProps) {
+export function ProjectDetail({ project, isDarkMode, onNextProject }: ProjectDetailProps) {
   // War Diary — Figma node 158-1613 (see WarDiaryDitailes.tsx)
   if (project.id === 'proj1') {
     return (
@@ -36,7 +37,7 @@ export function ProjectDetail({ project, isDarkMode }: ProjectDetailProps) {
       >
         {/* Render case study component directly - it handles its own layout */}
         <div className="h-full w-full min-w-0 overflow-x-hidden overflow-y-auto">
-          <WarDiaryDetails />
+          <WarDiaryDetails onNextProject={onNextProject} />
         </div>
       </motion.div>
     );

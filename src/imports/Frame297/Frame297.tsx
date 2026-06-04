@@ -59,7 +59,7 @@ export default function Frame297() {
             <div className="w-80 justify-start text-black text-3xl font-black font-['Satoshi']">Studential Project </div>
           </div>
           <div className="w-80 inline-flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">DESIGHN FIELD </div>
+            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">DESIGN FIELD </div>
             <div className="self-stretch justify-start text-black text-3xl font-black font-['Satoshi']">Web &amp; Print </div>
           </div>
         </div>
@@ -93,16 +93,14 @@ export default function Frame297() {
       </div>
       <div className="w-[568px] left-[736px] top-[4133px] absolute inline-flex flex-col justify-start items-start">
         <div className="self-stretch h-28 justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Design choice </div>
-        <div className="self-stretch h-[476px] justify-start text-black text-2xl font-normal font-['Satoshi']">
-          The visual direction is inspired by an archival structure a way of organizing moments over time.
+        <div className="self-stretch min-h-[476px] justify-start text-black text-2xl font-normal font-['Satoshi']">
+          To transform raw wartime documentation into an accessible digital archive, I designed a time based navigation
+          system. The interface allows users to filter content chronologically (by months and specific dates) while
+          transitioning from a structured, macro level overview into an intimate, immersive view of individual diary
+          entries.
           <br />
-          At first, it feels ordered and controlled, but as the viewer moves through it, a more personal layer is
-          revealed.
           <br />
-          <br />
-          The experience creates a glimpse into someone else’s life allowing moments to be seen, read, and quietly
-          understood. This proximity makes space for identification and emotional connection. The use of black and
-          white follows the original photographic language, preserving its raw and unfiltered quality.
+          The UX challenges included balancing heavy media load with a seamless, intuitive browsing experience.
         </div>
       </div>
       <img
@@ -110,22 +108,22 @@ export default function Frame297() {
         src={imgUiStripe}
         alt=""
       />
-      <div className="w-[549px] left-[36px] top-[6722px] absolute justify-start text-black text-2xl font-normal font-['Satoshi']">
+      <div className="w-[549px] left-[36px] top-[7695px] absolute justify-start text-black text-2xl font-normal font-['Satoshi']">
         The printed catalog translates the digital archive into a physical format. It preserves the same sense of
         intimacy allowing moments to be held, revisited, and experienced at a slower pace.
         <br />
         The sequence of images and texts creates a quiet rhythm, where each spread becomes a fragment of a larger
         narrative.
       </div>
-      <div className="left-[36px] top-[6639px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Catalog </div>
-      <div className="left-[36px] top-[7168px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Full Website</div>
-      <img className="w-[682.98px] h-[765.39px] left-[717px] top-[6195px] absolute object-cover" src={imgCatalog} alt="" />
+      <div className="left-[36px] top-[7612px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Catalog </div>
+      <div className="left-[36px] top-[6195px] absolute justify-start text-black text-6xl font-semibold font-['Clash_Grotesk']">Full Website</div>
+      <img className="w-[682.98px] h-[765.39px] left-[717px] top-[7168px] absolute object-cover" src={imgCatalog} alt="" />
       <div className="w-[1225px] h-[792px] left-[89px] top-[4864px] absolute bg-zinc-300 overflow-hidden">
         <video autoPlay muted loop playsInline className="size-full object-cover">
           <source src={warDiaryVideo1} />
         </video>
       </div>
-      <div className="w-[1225px] h-[792px] left-[87px] top-[7284px] absolute bg-zinc-300 overflow-hidden">
+      <div className="w-[1225px] h-[792px] left-[87px] top-[6311px] absolute bg-zinc-300 overflow-hidden">
         <video
           muted
           loop

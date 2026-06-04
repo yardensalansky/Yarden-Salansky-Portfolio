@@ -15,9 +15,14 @@ const WAR_DIARY_ARTBOARD_H = 8371;
 export interface WarDiaryDitailesProps {
   /** Let a parent (e.g. mobile detail card) own vertical scroll instead of this wrapper. */
   embedScrollParent?: boolean;
+  /** Opens the next project in the works list (after animating back to works). */
+  onNextProject?: () => void;
 }
 
-export default function WarDiaryDitailes({ embedScrollParent = false }: WarDiaryDitailesProps) {
+export default function WarDiaryDitailes({
+  embedScrollParent = false,
+  onNextProject,
+}: WarDiaryDitailesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -59,6 +64,22 @@ export default function WarDiaryDitailes({ embedScrollParent = false }: WarDiary
           <WarDiaryFigmaFrame />
         </div>
       </div>
+      {onNextProject ? (
+        <div className="flex w-full shrink-0 justify-center bg-white py-14">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              onNextProject();
+            }}
+            onPointerDown={(e) => e.stopPropagation()}
+            className="cursor-pointer border-0 bg-transparent font-['Clash_Grotesk'] text-4xl font-semibold tracking-wide text-black transition-opacity hover:opacity-60"
+          >
+            NEXT PROJECT &gt;&gt;
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -62,7 +62,7 @@ function MobileWarDiaryArtboard() {
         </div>
         <div className="flex w-48 flex-col items-start justify-start gap-2.5">
           <div className="self-stretch justify-start font-['Satoshi'] text-base font-bold text-neutral-500">
-            DESIGHN FIELD{' '}
+            DESIGN FIELD{' '}
           </div>
           <div className="self-stretch justify-start font-['Satoshi'] text-lg font-black text-black">Web & Print</div>
         </div>
@@ -106,15 +106,14 @@ function MobileWarDiaryArtboard() {
         <div className="h-16 self-stretch justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
           Design choice{' '}
         </div>
-        <div className="h-80 self-stretch justify-start font-['Satoshi'] text-base font-normal text-black">
-          The visual direction is inspired by an archival structure a way of organizing moments over time.
+        <div className="min-h-80 self-stretch justify-start font-['Satoshi'] text-base font-normal text-black">
+          To transform raw wartime documentation into an accessible digital archive, I designed a time based navigation
+          system. The interface allows users to filter content chronologically (by months and specific dates) while
+          transitioning from a structured, macro level overview into an intimate, immersive view of individual diary
+          entries.
           <br />
-          At first, it feels ordered and controlled, but as the viewer moves through it, a more personal layer is
-          revealed.
           <br />
-          The experience creates a glimpse into someone else&apos;s life allowing moments to be seen, read, and quietly
-          understood. This proximity makes space for identification and emotional connection. The use of black and white
-          follows the original photographic language, preserving its raw and unfiltered quality.
+          The UX challenges included balancing heavy media load with a seamless, intuitive browsing experience.
         </div>
       </div>
 
@@ -146,11 +145,11 @@ function MobileWarDiaryArtboard() {
         loading="lazy"
       />
 
-      <div className="absolute left-[11px] top-[3742px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
+      <div className="absolute left-[11px] top-[4344px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
         Catalog{' '}
       </div>
 
-      <div className="absolute left-[11px] top-[3799px] w-96 justify-start font-['Satoshi'] text-base font-normal text-black">
+      <div className="absolute left-[11px] top-[4401px] w-96 justify-start font-['Satoshi'] text-base font-normal text-black">
         The printed catalog translates the digital archive into a physical format. It preserves the same sense of
         intimacy allowing moments to be held, revisited, and experienced at a slower pace.
         <br />
@@ -158,26 +157,48 @@ function MobileWarDiaryArtboard() {
         narrative.
       </div>
 
-      <img className="absolute left-0 top-[3982px] h-80 w-96 object-cover" src={imgCatalog} alt="" loading="lazy" />
+      <img className="absolute left-0 top-[4584px] h-80 w-96 object-cover" src={imgCatalog} alt="" loading="lazy" />
 
-      <div className="absolute left-[11px] top-[4344px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
+      <div className="absolute left-[11px] top-[3742px] justify-start font-['Clash_Grotesk'] text-4xl font-semibold text-black">
         Full Website
       </div>
 
       {/* Wireframe: empty zinc only, no video. */}
-      <div className="absolute left-0 top-[4420px] h-64 w-96 bg-zinc-300" aria-hidden />
+      <div className="absolute left-0 top-[3818px] h-64 w-96 bg-zinc-300" aria-hidden />
 
-      <div className="absolute left-[79px] top-[4537px] justify-start font-['Clash_Grotesk'] text-xl font-bold text-black">
+      <div className="absolute left-[79px] top-[3935px] justify-start font-['Clash_Grotesk'] text-xl font-bold text-black">
         wardiary_video22-2.mp4
       </div>
     </div>
   );
 }
 
-export function MobileWarDiaryDetail() {
+function NextProjectFooter({ onNextProject }: { onNextProject: () => void }) {
   return (
-    <ScaledFigmaCaseStudy designWidth={W} designHeight={H} innerClassName="bg-white">
-      <MobileWarDiaryArtboard />
-    </ScaledFigmaCaseStudy>
+    <div className="flex w-full shrink-0 justify-center bg-white py-10">
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onNextProject();
+        }}
+        onPointerDown={(e) => e.stopPropagation()}
+        className="cursor-pointer border-0 bg-transparent font-['Clash_Grotesk'] text-2xl font-semibold tracking-wide text-black transition-opacity hover:opacity-60 touch-manipulation"
+      >
+        NEXT PROJECT &gt;&gt;
+      </button>
+    </div>
+  );
+}
+
+export function MobileWarDiaryDetail({ onNextProject }: { onNextProject?: () => void }) {
+  return (
+    <div className="flex w-full flex-col bg-white">
+      <ScaledFigmaCaseStudy designWidth={W} designHeight={H} innerClassName="bg-white">
+        <MobileWarDiaryArtboard />
+      </ScaledFigmaCaseStudy>
+      {onNextProject ? <NextProjectFooter onNextProject={onNextProject} /> : null}
+    </div>
   );
 }

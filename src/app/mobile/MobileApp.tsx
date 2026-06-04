@@ -14,7 +14,7 @@ import { MobileCanvasProjectDetail } from './MobileCanvasProjectDetail';
 import { MobileHeroPortrait } from './MobileHeroPortrait';
 import { MobileHorizontalWorksCluster } from './MobileHorizontalWorksCluster';
 import { MobilePlayBrainModal } from './MobilePlayBrainModal';
-import type { MobileProjectId } from './mobileProjects';
+import { MOBILE_PROJECTS, type MobileProjectId } from './mobileProjects';
 
 /**
  * Explore opens a horizontal hub (hero left → lines right → works). Project detail is a real column to the right;
@@ -197,6 +197,21 @@ export function MobileApp() {
     return () => ac.abort();
   }, [vw, vh, detailId, explored, scrollToCenterDetailPanel, commitDetailLine]);
 
+  const scrollToWorksHub = useCallback(
+    async (signal: AbortSignal, durationMs = 620) => {
+      const sc = hScrollRef.current;
+      if (!sc) return;
+      const maxS = Math.max(0, sc.scrollWidth - sc.clientWidth);
+      const target = Math.min(maxS, Math.max(heroW * 0.5, heroW + stationGutter * 0.25));
+      try {
+        await animateScrollLeft(sc, target, durationMs, signal);
+      } catch {
+        /* aborted */
+      }
+    },
+    [heroW, stationGutter]
+  );
+
   const closeDetail = useCallback(() => {
     setDetailLine(null);
     setDetailId(null);
@@ -205,14 +220,39 @@ export function MobileApp() {
     panAbortRef.current = ac;
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const sc = hScrollRef.current;
-        if (!sc || ac.signal.aborted) return;
-        const maxS = Math.max(0, sc.scrollWidth - sc.clientWidth);
-        const target = Math.min(maxS, Math.max(heroW * 0.5, heroW + stationGutter * 0.25));
-        void animateScrollLeft(sc, target, 620, ac.signal).catch(() => {});
+        if (ac.signal.aborted) return;
+        void scrollToWorksHub(ac.signal, 620);
       });
     });
-  }, [heroW, stationGutter]);
+  }, [scrollToWorksHub]);
+
+  const handleNextProject = useCallback(async () => {
+    if (!detailId) return;
+    const currentIndex = MOBILE_PROJECTS.findIndex((p) => p.id === detailId);
+    if (currentIndex < 0 || currentIndex >= MOBILE_PROJECTS.length - 1) return;
+
+    const nextId = MOBILE_PROJECTS[currentIndex + 1]!.id;
+
+    panAbortRef.current?.abort();
+    const ac = new AbortController();
+    panAbortRef.current = ac;
+
+    setDetailLine(null);
+    setDetailId(null);
+
+    await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+    if (ac.signal.aborted) return;
+
+    await scrollToWorksHub(ac.signal, 620);
+    if (ac.signal.aborted) return;
+
+    await new Promise<void>((r) => window.setTimeout(() => r(), 80));
+    if (ac.signal.aborted) return;
+
+    const workEl = document.querySelector<HTMLElement>(`[data-mobile-work="${nextId}"]`);
+    if (!workEl) return;
+    await openDetail(nextId, workEl.getBoundingClientRect());
+  }, [detailId, openDetail, scrollToWorksHub]);
 
   useEffect(() => {
     if (detailId || playBrainOpen || aboutOpen) {
@@ -341,7 +381,15 @@ export function MobileApp() {
                           exit={{ opacity: 0, transition: { duration: 0.22, ease: [0.4, 0, 1, 1] } }}
                           transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
                         >
-                          <MobileCanvasProjectDetail projectId={detailId} onClose={closeDetail} />
+                          <MobileCanvasProjectDetail
+                            projectId={detailId}
+                            onClose={closeDetail}
+                            onNextProject={
+                              detailId === 'proj1'
+                                ? handleNextProject
+                                : undefined
+                            }
+                          />
                         </motion.div>
                       )}
                     </AnimatePresence>

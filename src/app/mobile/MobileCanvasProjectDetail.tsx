@@ -9,19 +9,22 @@ import TheOneDetiales from '../../imports/TheOneDetiales/TheOneDetiales';
 interface MobileCanvasProjectDetailProps {
   projectId: MobileProjectId;
   onClose: () => void;
+  onNextProject?: () => void;
 }
 
 /** Same case studies as desktop `ProjectDetail`, scaled to the card width (Figma pages use `ScaledFigmaCaseStudy`). */
 function CaseStudyBody({
   projectId,
   embedScrollParent,
+  onNextProject,
 }: {
   projectId: MobileProjectId;
   embedScrollParent: boolean;
+  onNextProject?: () => void;
 }) {
   switch (projectId) {
     case 'proj1':
-      return <MobileWarDiaryDetail />;
+      return <MobileWarDiaryDetail onNextProject={onNextProject} />;
     case 'proj2':
       return (
         <ScaledFigmaCaseStudy designWidth={1400} designHeight={9343.56} innerClassName="bg-white">
@@ -44,7 +47,11 @@ function CaseStudyBody({
 /**
  * Mobile detail shell: sticky close + one scroll area. Body matches web case studies (scaled), not custom mobile copies.
  */
-export function MobileCanvasProjectDetail({ projectId, onClose }: MobileCanvasProjectDetailProps) {
+export function MobileCanvasProjectDetail({
+  projectId,
+  onClose,
+  onNextProject,
+}: MobileCanvasProjectDetailProps) {
   const meta = MOBILE_PROJECTS.find((p) => p.id === projectId);
   if (!meta) return null;
   const dark = meta.sheetTheme === 'dark';
@@ -82,7 +89,11 @@ export function MobileCanvasProjectDetail({ projectId, onClose }: MobileCanvasPr
         }`}
         style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
       >
-        <CaseStudyBody projectId={projectId} embedScrollParent={true} />
+        <CaseStudyBody
+          projectId={projectId}
+          embedScrollParent={true}
+          onNextProject={onNextProject}
+        />
       </div>
     </article>
   );

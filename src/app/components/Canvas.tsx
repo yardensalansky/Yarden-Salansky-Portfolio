@@ -636,6 +636,8 @@ export function Canvas() {
   const zoomAnimRef = useRef<ReturnType<typeof animate> | null>(null);
   const worksCameraXAnimRef = useRef<ReturnType<typeof animate> | null>(null);
   const worksCameraYAnimRef = useRef<ReturnType<typeof animate> | null>(null);
+  const projectNavTransitionRef = useRef(false);
+  const projectNavTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useLayoutEffect(() => {
     rowScaleAnimRef.current?.stop();
@@ -1355,6 +1357,40 @@ export function Canvas() {
     setSelectedProject(null);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (projectNavTimeoutRef.current != null) {
+        clearTimeout(projectNavTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleNextProject = useCallback(() => {
+    if (!selectedProject || projectNavTransitionRef.current) return;
+    const currentIndex = projects.findIndex((p) => p.id === selectedProject.id);
+    if (currentIndex < 0 || currentIndex >= projects.length - 1) return;
+
+    const nextIndex = currentIndex + 1;
+    const nextProject = projects[nextIndex];
+
+    projectNavTransitionRef.current = true;
+    setPlayClosing(false);
+    setPlayModeActive(false);
+    setAboutVisible(false);
+    setProjectsVisible(true);
+    setSelectedProject(null);
+
+    if (projectNavTimeoutRef.current != null) {
+      clearTimeout(projectNavTimeoutRef.current);
+    }
+    projectNavTimeoutRef.current = window.setTimeout(() => {
+      projectNavTimeoutRef.current = null;
+      projectNavTransitionRef.current = false;
+      setLastOpenedProjectIndex(nextIndex);
+      setSelectedProject(nextProject);
+    }, WORKS_LIST_ZOOM_DURATION_SEC * 1000);
+  }, [selectedProject]);
+
   // Close details with ESC (same close path as X button).
   useEffect(() => {
     if (!selectedProject) return;
@@ -1749,7 +1785,15 @@ export function Canvas() {
               >
                 ×
               </button>
-              <ProjectDetail project={selectedProject} isDarkMode={isDarkMode} />
+              <ProjectDetail
+                project={selectedProject}
+                isDarkMode={isDarkMode}
+                onNextProject={
+                  selectedProject.id === 'proj1' && selectedProjectIndex < projects.length - 1
+                    ? handleNextProject
+                    : undefined
+                }
+              />
             </div>
           )}
           </div>
