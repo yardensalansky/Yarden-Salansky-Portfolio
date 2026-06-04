@@ -433,14 +433,14 @@ export function Canvas() {
   /** Tight gap between kinetic panel and hero (smaller than `CARD_GAP` so the pair fits when the hero stays viewport-centered). */
   const PLAY_KINETIC_GAP = 18;
 
-  // Initial view: center the Hero in the content band below the wordmark (not raw viewport center).
+  // Initial view: center the Hero in the viewport.
   useLayoutEffect(() => {
     const w = window.innerWidth;
     const h = window.innerHeight;
     const heroCenterX = heroPos.x + heroWidth / 2;
     const heroCenterY = heroPos.y + heroHeight / 2;
     cameraX.set(w / 2 - heroCenterX);
-    cameraY.set(contentBandMidY(h, CONTENT_TOP_BELOW_LOGO_PX) - heroCenterY);
+    cameraY.set(h / 2 - heroCenterY);
   }, []);
 
   const heroX = heroPos.x;
@@ -807,7 +807,6 @@ export function Canvas() {
           heroY,
           heroWidth,
           heroHeight,
-          viewportCenterY: contentBandMidY(vh, CONTENT_TOP_BELOW_LOGO_PX),
         });
         cameraX.set(camX);
         cameraY.set(camY);
@@ -882,7 +881,6 @@ export function Canvas() {
             heroY,
             heroWidth,
             heroHeight,
-            viewportCenterY: contentBandMidY(vh, CONTENT_TOP_BELOW_LOGO_PX),
           });
           worksCameraXAnimRef.current = animate(cameraX, camX, {
             duration: WORKS_LIST_ZOOM_DURATION_SEC,
@@ -904,7 +902,6 @@ export function Canvas() {
             heroY,
             heroWidth,
             heroHeight,
-            viewportCenterY: contentBandMidY(vh, CONTENT_TOP_BELOW_LOGO_PX),
           });
           worksCameraXAnimRef.current = animate(cameraX, camX, {
             duration: 0.55,
@@ -926,7 +923,6 @@ export function Canvas() {
             heroY,
             heroWidth,
             heroHeight,
-            viewportCenterY: contentBandMidY(vh, CONTENT_TOP_BELOW_LOGO_PX),
           });
           worksCameraXAnimRef.current = animate(cameraX, camX, {
             duration: WORKS_LIST_ZOOM_DURATION_SEC,
@@ -952,7 +948,6 @@ export function Canvas() {
               heroY,
               heroWidth,
               heroHeight,
-              viewportCenterY: contentBandMidY(vh, CONTENT_TOP_BELOW_LOGO_PX),
             });
             worksCameraXAnimRef.current = animate(cameraX, camX, { duration: 0, ease });
             worksCameraYAnimRef.current = animate(cameraY, camY, { duration: 0, ease });
@@ -1006,7 +1001,6 @@ export function Canvas() {
         heroY,
         heroWidth,
         heroHeight,
-        viewportCenterY: contentBandMidY(vh, CONTENT_TOP_BELOW_LOGO_PX),
       });
       worksCameraXAnimRef.current = animate(cameraX, camX, {
         duration,

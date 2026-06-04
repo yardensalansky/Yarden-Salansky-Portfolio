@@ -20,6 +20,10 @@ const DESIGN_H = 900;
 const HERO_W = 1100;
 const HERO_H = 650;
 
+/** Shared size + padding for all hero CTAs. */
+const HERO_STONE_CTA_CLASS =
+  "pointer-events-auto flex h-16 shrink-0 cursor-pointer items-center justify-center border-0 bg-stone-100 px-6 py-4 font-['Clash_Grotesk'] text-2xl font-semibold leading-none tracking-wide text-black whitespace-nowrap";
+
 export const Hero = React.forwardRef<HTMLDivElement, HeroProps>(function Hero(
   { onExplore, onPlay, onRestart, onAbout, isDarkMode: _isDarkMode, playModeActive, kineticStage },
   ref,
@@ -66,81 +70,82 @@ export const Hero = React.forwardRef<HTMLDivElement, HeroProps>(function Hero(
         }}
       >
         <div className="relative h-[900px] w-[1400px] overflow-visible">
-          <div className="pointer-events-none absolute left-[1089.74px] top-[699px] h-16 w-64 origin-top-left rotate-[2.60deg] bg-stone-100" />
-          {onPlay && (
-            <div className="pointer-events-none absolute left-[1321px] top-[833.35px] h-12 w-52 origin-top-left rotate-[177.40deg] bg-stone-100" />
-          )}
+          <div className="pointer-events-auto absolute bottom-[58px] left-[48px] right-[48px] flex flex-row items-center justify-between gap-5">
+            <div className="flex shrink-0 flex-row flex-wrap items-center gap-5">
+              {onPlay &&
+                (playModeActive ? (
+                  <motion.button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onRestart) onRestart();
+                      else onPlay?.();
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.15 }}
+                    className={HERO_STONE_CTA_CLASS}
+                  >
+                    RESTART
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPlay();
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.15 }}
+                    className={HERO_STONE_CTA_CLASS}
+                  >
+                    PLAY WITH MY BRAIN
+                  </motion.button>
+                ))}
 
-          <motion.button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onExplore();
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="pointer-events-auto absolute left-[1103.91px] top-[715.57px] origin-top-left rotate-[2.69deg] cursor-pointer border-0 bg-transparent p-0 text-left font-['Clash_Grotesk'] text-2xl font-semibold text-black"
-          >
-            EXPLORE MY WORKS
-          </motion.button>
-
-          {onPlay &&
-            (playModeActive ? (
               <motion.button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (onRestart) onRestart();
-                  else onPlay?.();
+                  onAbout();
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.15 }}
-                className="pointer-events-auto absolute left-[1321px] top-[833.35px] flex h-12 w-52 origin-top-left rotate-[177.40deg] cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-center font-['Clash_Grotesk'] text-xl font-semibold leading-none text-black"
+                transition={{ duration: 0.4, delay: 0.08 }}
+                className={HERO_STONE_CTA_CLASS}
               >
-                <span className="inline-block rotate-[-177.40deg]">RESTART</span>
+                ABOUT
               </motion.button>
-            ) : (
+            </div>
+
+            <div className="flex shrink-0 items-center">
               <motion.button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onPlay();
+                  onExplore();
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.15 }}
-                className="pointer-events-auto absolute left-[1116px] top-[805.26px] origin-top-left rotate-[-2.20deg] cursor-pointer border-0 bg-transparent p-0 text-left font-['Clash_Grotesk'] text-xl font-semibold text-black"
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className={HERO_STONE_CTA_CLASS}
               >
-                PLAY WITH MY BRAIN
+                EXPLORE MY WORKS
               </motion.button>
-            ))}
-
-          <motion.button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAbout();
-            }}
-            onPointerDown={(e) => e.stopPropagation()}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.08 }}
-            className="pointer-events-auto absolute left-[48px] top-[782px] flex h-12 w-36 origin-top-left rotate-[2.65deg] cursor-pointer items-center justify-center border-0 bg-stone-100 p-0 text-center font-['Clash_Grotesk'] text-xl font-semibold leading-none text-black"
-          >
-            ABOUT
-          </motion.button>
+            </div>
+          </div>
 
           {!playModeActive && (
             <div className="pointer-events-none absolute left-[56px] top-[546px] h-56 w-[945.66px] justify-start font-['Clash_Grotesk'] text-4xl font-medium leading-[1.25] text-white">
               Welcome to a piece of my mind.
               <br />
-              I&apos;m a graphic designer who loves working from the sofa, but I&apos;ll give it up for a good
-              job.
+              I&apos;m a Product Designer &amp; Visual Storyteller who loves working from the sofa, but I&apos;ll give
+              it up for a good job.
             </div>
           )}
         </div>
