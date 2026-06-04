@@ -41,11 +41,14 @@ export default function TheKiteRunnerDetiales() {
       className="relative h-[6316px] w-[1400px] max-w-full min-w-0 overflow-hidden bg-white"
       data-name="the kite runner detiales"
     >
-      <div className="absolute left-[31px] top-[617.29px] inline-flex w-[1159.52px] flex-col items-start justify-start gap-16">
-        <div className="self-stretch justify-start font-['Satoshi'] text-5xl font-bold leading-[51.5px] text-black">
+      {/* Intro + metadata: under ~496px hero; equal space above/below headline; 10px above shell bottom (863px). */}
+      <div className="absolute left-[31px] top-[496px] box-border flex h-[367px] w-[1159.52px] flex-col pb-[10px]">
+        <div className="min-h-0 flex-1" aria-hidden />
+        <div className="shrink-0 self-stretch justify-start font-['Satoshi'] text-5xl font-bold leading-[51.5px] text-black">
           This project presents an opening sequence for a series adaptation of The Kite Runner.
         </div>
-        <div className="inline-flex items-center justify-start gap-20">
+        <div className="min-h-0 flex-1" aria-hidden />
+        <div className="inline-flex shrink-0 -translate-y-[10px] items-center justify-start gap-20">
           <div className="inline-flex w-24 flex-col items-start justify-start gap-4">
             <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">YEAR</div>
             <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">2026</div>
@@ -58,7 +61,7 @@ export default function TheKiteRunnerDetiales() {
           </div>
           <div className="inline-flex w-72 flex-col items-start justify-start gap-4">
             <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">
-              DESIGHN FIELD{' '}
+              DESIGN FIELD{' '}
             </div>
             <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">Motion</div>
           </div>

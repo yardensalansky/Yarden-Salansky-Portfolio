@@ -36,7 +36,7 @@ function Frame46() {
 function Frame47() {
   return (
     <div className="content-stretch flex flex-col gap-[11px] items-start relative shrink-0 w-[198px]">
-      <p className="font-['Roboto:Medium',sans-serif] font-medium relative shrink-0 text-[#797979] text-[15px] w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>{`DESIGHN FIELD `}</p>
+      <p className="font-['Roboto:Medium',sans-serif] font-medium relative shrink-0 text-[#797979] text-[15px] w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>{`DESIGN FIELD `}</p>
       <p className="font-['Roboto:ExtraBold',sans-serif] font-extrabold relative shrink-0 text-[20px] text-black w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>{`App `}</p>
     </div>
   );

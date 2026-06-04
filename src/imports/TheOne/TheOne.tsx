@@ -61,7 +61,7 @@ function Frame3() {
   return (
     <div className="content-stretch flex flex-col gap-[9px] items-start relative shrink-0 w-[168px]">
       <p className="font-['Roboto:Medium',sans-serif] font-medium relative shrink-0 text-[#797979] text-[12.283px] w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>
-        DESIGHN FIELD
+        DESIGN FIELD
       </p>
       <p className="font-['Roboto:ExtraBold',sans-serif] font-extrabold relative shrink-0 text-[16.377px] text-black w-full" dir="auto" style={{ fontVariationSettings: "'wdth' 100" }}>
         Brand Identity
