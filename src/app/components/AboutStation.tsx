@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { X } from 'lucide-react';
+import { CloseCircleButton } from './CloseCircleButton';
 
 /** Design artboard (px) — inner content stays at this size, then scaled uniformly. */
 const STATION_W = 675;
@@ -60,19 +60,16 @@ export function AboutStation({ onClose, isDarkMode: _isDarkMode }: AboutStationP
           transformOrigin: 'top left',
         }}
       >
-        <button
-          type="button"
+        <CloseCircleButton
+          className="absolute right-3 top-3 z-30"
           onClick={(e) => {
             e.stopPropagation();
             onClose();
           }}
           onPointerDown={(e) => e.stopPropagation()}
-          className="absolute right-3 top-3 z-30 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/15 bg-white/92 p-0 text-black shadow-md backdrop-blur-sm hover:bg-white"
           aria-label="Close about"
           title="Close"
-        >
-          <X size={18} strokeWidth={2.25} aria-hidden />
-        </button>
+        />
 
         <div className="relative h-full w-full" style={{ color: FG }}>
           <div

@@ -30,6 +30,7 @@ function normalizeWheelDelta(e: WheelEvent): { dx: number; dy: number } {
   }
   return { dx, dy };
 }
+import { CloseCircleButton } from './CloseCircleButton';
 import { Hero } from './Hero';
 import { AboutStation, ABOUT_STATION_HEIGHT } from './AboutStation';
 import { Projects } from './Projects';
@@ -441,6 +442,8 @@ export function Canvas() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [lastOpenedProjectIndex, setLastOpenedProjectIndex] = useState<number>(0);
   const [isDragging, setIsDragging] = useState(false);
+  /** False on first hero view: pan/zoom unlock after EXPLORE, PLAY, or ABOUT. */
+  const [canvasNavUnlocked, setCanvasNavUnlocked] = useState(false);
   const [isHoveringDetail, setIsHoveringDetail] = useState(false);
   /** User + auto framing zoom (multiplies rowScale cluster). Animated for Explore / detail open. */
   const zoomMotion = useMotionValue(1);
@@ -727,6 +730,11 @@ export function Canvas() {
     };
 
     const handleWheel = (e: WheelEvent) => {
+      if (!canvasNavUnlocked) {
+        e.preventDefault();
+        return;
+      }
+
       // Trackpad pinch-to-zoom (Chrome sends ctrl+wheel).
       if (e.ctrlKey) {
         e.preventDefault();
@@ -811,6 +819,7 @@ export function Canvas() {
   }, [
     cameraX,
     cameraY,
+    canvasNavUnlocked,
     isHoveringDetail,
     isHoveringPlayCard,
     selectedProject,
@@ -1270,6 +1279,7 @@ export function Canvas() {
   ]);
 
   const handleExplore = () => {
+    setCanvasNavUnlocked(true);
     setPlayClosing(false);
     setPlayModeActive(false);
     setAboutVisible(false);
@@ -1280,6 +1290,7 @@ export function Canvas() {
   };
 
   const handleAbout = useCallback(() => {
+    setCanvasNavUnlocked(true);
     setPlayClosing(false);
     setPlayModeActive(false);
     setProjectsVisible(false);
@@ -1299,6 +1310,7 @@ export function Canvas() {
         if (!playClosing) setPlayClosing(true);
         return true;
       }
+      setCanvasNavUnlocked(true);
       setPlayClosing(false);
       setSelectedProject(null);
       setAboutVisible(false);
@@ -1313,6 +1325,7 @@ export function Canvas() {
     worksCameraXAnimRef.current?.stop();
     worksCameraYAnimRef.current?.stop();
     canvasResetToInitialRef.current = true;
+    setCanvasNavUnlocked(false);
     setPlayClosing(false);
     setProjectsVisible(false);
     setSelectedProject(null);
@@ -1413,6 +1426,7 @@ export function Canvas() {
   const ZOOM_BTN_DURATION = 0.22;
 
   const handleZoomIn = () => {
+    if (!canvasNavUnlocked) return;
     zoomAnimRef.current?.stop();
     worksCameraXAnimRef.current?.stop();
     worksCameraYAnimRef.current?.stop();
@@ -1443,6 +1457,7 @@ export function Canvas() {
   };
 
   const handleZoomOut = () => {
+    if (!canvasNavUnlocked) return;
     zoomAnimRef.current?.stop();
     worksCameraXAnimRef.current?.stop();
     worksCameraYAnimRef.current?.stop();
@@ -1476,6 +1491,7 @@ export function Canvas() {
     worksCameraXAnimRef.current?.stop();
     worksCameraYAnimRef.current?.stop();
     forceHeroFramingRef.current = true;
+    setCanvasNavUnlocked(false);
     setProjectsVisible(false);
     setSelectedProject(null);
     setAboutVisible(false);
@@ -1495,7 +1511,7 @@ export function Canvas() {
         backgroundColor: theme.background,
       }}
     >
-      {/* Fixed wordmark: #1F1F1F by default; white when overlapping hero / play / detail dark surfaces */}
+      {/* Fixed wordmark: white in dark mode or when overlapping hero / play / detail dark surfaces */}
       <div
         className="pointer-events-none fixed left-1/2 top-0 z-[60] pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-[max(1.5rem,env(safe-area-inset-top))]"
         style={{ transform: 'translate(-50%, -20px)' }}
@@ -1503,7 +1519,7 @@ export function Canvas() {
         <div
           ref={logoWordmarkRef}
           className="relative h-[4.5rem] w-[22rem] max-w-[calc(100vw-2rem)]"
-          style={{ color: logoOnDarkSurface ? '#ffffff' : '#1F1F1F' }}
+          style={{ color: isDarkMode || logoOnDarkSurface ? '#ffffff' : '#1F1F1F' }}
         >
           <div className="absolute left-0 top-0 justify-start font-['Clash_Grotesk'] text-[2rem] font-semibold leading-none sm:text-4xl">
             YARDEN SALANSKY{' '}
@@ -1573,7 +1589,7 @@ export function Canvas() {
 
       {/* Draggable Canvas: pan on outer layer, zoom on inner so scale is about viewport center */}
       <motion.div
-        drag={!isHoveringDetail}
+        drag={canvasNavUnlocked && !isHoveringDetail}
         dragConstraints={{ left: -5500, right: 2500, top: -2800, bottom: 1200 }}
         dragElastic={0}
         dragMomentum={false}
@@ -1749,19 +1765,16 @@ export function Canvas() {
               onMouseEnter={() => setIsHoveringDetail(true)}
               onMouseLeave={() => setIsHoveringDetail(false)}
             >
-              <button
-                type="button"
+              <CloseCircleButton
+                className="absolute right-3 top-3 z-30"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleCloseDetails();
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
-                className="absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full border border-black/15 bg-white/92 text-[22px] leading-none text-black shadow-md backdrop-blur-sm hover:bg-white"
                 aria-label="Close project details"
                 title="Close details"
-              >
-                ×
-              </button>
+              />
               <ProjectDetail
                 project={selectedProject}
                 isDarkMode={isDarkMode}

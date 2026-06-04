@@ -1,3 +1,4 @@
+import { CloseCircleButton } from '../components/CloseCircleButton';
 import type { MobileProjectId } from './mobileProjects';
 import { MOBILE_PROJECTS } from './mobileProjects';
 import { ScaledFigmaCaseStudy } from './ScaledFigmaCaseStudy';
@@ -85,16 +86,13 @@ export function MobileCanvasProjectDetail({
       <span id="mobile-detail-title" className="sr-only">
         {meta.title}
       </span>
-      <button
-        type="button"
+      <CloseCircleButton
+        size="lg"
+        className="absolute right-3 top-3 z-50 touch-manipulation"
         onClick={onClose}
-        className="absolute right-3 top-3 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg leading-none text-neutral-800 shadow-md touch-manipulation"
         aria-label="Close"
-      >
-        <span className="font-['Satoshi']" aria-hidden>
-          ×
-        </span>
-      </button>
+        title="Close"
+      />
       <div
         className={`@container min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain ${
           dark ? 'bg-[#DAD7DE]' : 'bg-white'

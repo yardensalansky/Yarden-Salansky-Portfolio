@@ -8,7 +8,8 @@ import {
   useId,
   type ReactNode,
 } from 'react';
-import { X, Dice5 } from 'lucide-react';
+import { Dice5 } from 'lucide-react';
+import { CloseCircleButton } from './CloseCircleButton';
 import { CurvedLine } from './CurvedLine';
 
 /** Gutter between controller column and kinetic stage inside the play card. */
@@ -719,14 +720,13 @@ export function KineticStylePanel() {
         >
           <Dice5 size={18} />
         </button>
-        <button
-          type="button"
+        <CloseCircleButton
+          size="sm"
           onClick={onToggle}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-black/15 bg-white text-black shadow-sm hover:bg-black/5"
+          className="shadow-sm hover:bg-black/5"
           title="Close play"
-        >
-          <X size={16} />
-        </button>
+          aria-label="Close play"
+        />
       </div>
 
       <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-black/45">
@@ -845,19 +845,16 @@ export function KineticHeroStage() {
       <div className="absolute inset-0 z-[3] flex min-h-0 min-w-0 items-center justify-center overflow-hidden">
         {renderCurrentTheme()}
       </div>
-      <button
-        type="button"
+      <CloseCircleButton
+        className="absolute right-3 top-3 z-30"
         onClick={(e) => {
           e.stopPropagation();
           onToggle();
         }}
         onPointerDown={(e) => e.stopPropagation()}
-        className="absolute right-3 top-3 z-30 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/15 bg-white/92 p-0 text-black shadow-md backdrop-blur-sm hover:bg-white"
         aria-label="Close play"
         title="Close play"
-      >
-        <X size={18} strokeWidth={2.25} aria-hidden />
-      </button>
+      />
       <p className="pointer-events-none absolute bottom-2 left-3 z-[4] select-none text-[7px] uppercase tracking-[0.2em] text-black/25">
         Yarden portfolio · kinetic
       </p>
