@@ -175,6 +175,52 @@ function computeDetailPanelCamera(args: {
   return { camX, camY };
 }
 
+/** Camera centered on the detail panel (viewport center at zoom z). */
+function computeDetailPanelCenterCamera(args: {
+  z: number;
+  vw: number;
+  vh: number;
+  rowScale: number;
+  scaleOriginX: number;
+  scaleOriginY: number;
+  detailColumnLeft: number;
+  detailWidth: number;
+  worksTop: number;
+  projectStride: number;
+  detailRowIndex: number;
+  detailHeight: number;
+  /** Vertical focus in viewport px (default: band below fixed wordmark). */
+  viewportCenterY?: number;
+}): { camX: number; camY: number } {
+  const {
+    z,
+    vw,
+    vh,
+    rowScale,
+    scaleOriginX,
+    scaleOriginY,
+    detailColumnLeft,
+    detailWidth,
+    worksTop,
+    projectStride,
+    detailRowIndex,
+    detailHeight,
+    viewportCenterY,
+  } = args;
+
+  const detailCenterX = detailColumnLeft + detailWidth / 2;
+  const detailCenterY = worksTop + detailRowIndex * projectStride + detailHeight / 2;
+  const vcy = viewportCenterY ?? vh / 2;
+
+  const innerX = scaleOriginX + rowScale * (detailCenterX - scaleOriginX);
+  const innerY = scaleOriginY + rowScale * (detailCenterY - scaleOriginY);
+
+  return {
+    camX: -z * (innerX - vw / 2),
+    camY: -z * (innerY - vcy),
+  };
+}
+
 /** Camera so the About station (below hero) is centered in the viewport at zoom z. */
 function computeAboutPanelCamera(args: {
   z: number;
@@ -223,6 +269,9 @@ function contentBandMidY(vh: number, topInsetPx: number): number {
   const inset = Math.max(0, topInsetPx);
   return inset + (vh - inset) / 2;
 }
+
+/** Band below the fixed wordmark (logo block + top padding). */
+const CONTENT_TOP_BELOW_LOGO_PX = 124;
 
 /**
  * Pan values after changing `zoomMotion` so the scene under the viewport center stays fixed.
@@ -439,15 +488,13 @@ export function Canvas() {
   const detailWidth = 1400; // 2x scale
   /** Slightly shorter than 2×450 so the canvas peeks past the bottom of the detail card. */
   const detailHeight = 848;
+  /** War Diary detail shell: extra height at the bottom only (top / marginTop unchanged). */
+  const WAR_DIARY_DETAIL_EXTRA_BOTTOM_PX = 15;
+  /** Nudge War Diary detail framing down on screen (viewport px). */
+  const WAR_DIARY_CARD_OFFSET_DOWN_PX = 10;
 
   /** Space between stacked project cards (vertical + horizontal rhythm when using flex gap). */
   const CARD_GAP = 60;
-
-  /**
-   * Band below the fixed wordmark (logo block + top padding). Hero vertical center targets the middle of
-   * (this inset → bottom of viewport) so the hero clears the logo on short viewports (e.g. 14" windowed).
-   */
-  const CONTENT_TOP_BELOW_LOGO_PX = 120;
 
   /** Responsive but proportional station spacing used for BOTH connections. */
   const getStationGutter = (vw: number) => Math.round(Math.max(260, Math.min(420, vw * 0.24)));
@@ -495,6 +542,11 @@ export function Canvas() {
   const selectedProjectIndex = selectedProject
     ? projects.findIndex((p) => p.id === selectedProject.id)
     : -1;
+
+  const activeDetailHeight =
+    selectedProject?.id === 'proj1'
+      ? detailHeight + WAR_DIARY_DETAIL_EXTRA_BOTTOM_PX
+      : detailHeight;
 
   const LAYOUT_MARGIN = 40;
   const MIN_ROW_SCALE = 0.22;
@@ -1100,11 +1152,16 @@ export function Canvas() {
       return cleanup;
     }
 
+    const detailIdealWidth = (DETAIL_VIEW_FRAC * vw) / (detailWidth * rowScale);
+    const panelDetailHeight =
+      selectedProject?.id === 'proj1'
+        ? detailHeight + WAR_DIARY_DETAIL_EXTRA_BOTTOM_PX
+        : detailHeight;
+    const detailIdealHeight = (DETAIL_VIEW_FRAC * vh) / (panelDetailHeight * rowScale);
     const ideal = selectedProject
-      ? Math.min(
-          (DETAIL_VIEW_FRAC * vw) / (detailWidth * rowScale),
-          (DETAIL_VIEW_FRAC * vh) / (detailHeight * rowScale),
-        )
+      ? selectedProject.id === 'proj1'
+        ? detailIdealHeight
+        : Math.min(detailIdealWidth, detailIdealHeight)
       : Math.min(
           (WORKS_CARD_VIEW_FRAC * vw) / (projectWidth * rowScale),
           (WORKS_CARD_VIEW_FRAC * vh) / (projectHeight * rowScale),
@@ -1146,20 +1203,41 @@ export function Canvas() {
         ease,
       });
     } else if (selectedProjectIndex !== -1) {
-      const { camX, camY } = computeDetailPanelCamera({
-        z: targetZ,
-        vw,
-        vh,
-        rowScale,
-        scaleOriginX,
-        scaleOriginY,
-        detailColumnLeft,
-        detailWidth,
-        worksTop,
-        projectStride,
-        detailRowIndex: selectedProjectIndex,
-        detailTopInsetPx: CONTENT_TOP_BELOW_LOGO_PX,
-      });
+      let camX: number;
+      let camY: number;
+      if (selectedProject?.id === 'proj1') {
+        ({ camX, camY } = computeDetailPanelCenterCamera({
+          z: targetZ,
+          vw,
+          vh,
+          rowScale,
+          scaleOriginX,
+          scaleOriginY,
+          detailColumnLeft,
+          detailWidth,
+          worksTop,
+          projectStride,
+          detailRowIndex: selectedProjectIndex,
+          detailHeight: panelDetailHeight,
+          viewportCenterY: vh / 2,
+        }));
+        camY += WAR_DIARY_CARD_OFFSET_DOWN_PX;
+      } else {
+        ({ camX, camY } = computeDetailPanelCamera({
+          z: targetZ,
+          vw,
+          vh,
+          rowScale,
+          scaleOriginX,
+          scaleOriginY,
+          detailColumnLeft,
+          detailWidth,
+          worksTop,
+          projectStride,
+          detailRowIndex: selectedProjectIndex,
+          detailTopInsetPx: CONTENT_TOP_BELOW_LOGO_PX,
+        }));
+      }
       worksCameraXAnimRef.current = animate(cameraX, camX, {
         duration,
         ease,
@@ -1267,6 +1345,8 @@ export function Canvas() {
   const handleProjectClick = (project: Project, index: number) => {
     setPlayClosing(false);
     setPlayModeActive(false);
+    setAboutVisible(false);
+    setProjectsVisible(true);
     setLastOpenedProjectIndex(index);
     setSelectedProject(project);
   };
@@ -1403,16 +1483,19 @@ export function Canvas() {
       }}
     >
       {/* Fixed wordmark: #1F1F1F by default; white when overlapping hero / play / detail dark surfaces */}
-      <div className="pointer-events-none fixed left-1/2 top-0 z-[60] -translate-x-1/2 pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-[max(1.5rem,env(safe-area-inset-top))]">
+      <div
+        className="pointer-events-none fixed left-1/2 top-0 z-[60] pt-[max(0.75rem,env(safe-area-inset-top))] sm:pt-[max(1.5rem,env(safe-area-inset-top))]"
+        style={{ transform: 'translate(-50%, -20px)' }}
+      >
         <div
           ref={logoWordmarkRef}
-          className="relative h-20 w-96"
+          className="relative h-[4.5rem] w-[22rem] max-w-[calc(100vw-2rem)]"
           style={{ color: logoOnDarkSurface ? '#ffffff' : '#1F1F1F' }}
         >
-          <div className="absolute left-0 top-0 justify-start font-['Clash_Grotesk'] text-4xl font-semibold">
+          <div className="absolute left-0 top-0 justify-start font-['Clash_Grotesk'] text-[2rem] font-semibold leading-none sm:text-4xl">
             YARDEN SALANSKY{' '}
           </div>
-          <div className="absolute left-[133px] top-[38px] justify-start font-['Clash_Grotesk'] text-xl font-normal leading-tight">
+          <div className="absolute left-[7.25rem] top-[2.125rem] justify-start font-['Clash_Grotesk'] text-lg font-normal leading-tight sm:left-[133px] sm:top-[36px] sm:text-xl">
             PORTFOLIO
           </div>
         </div>
@@ -1543,7 +1626,7 @@ export function Canvas() {
                 x1={worksColumnLeft + projectWidth - CONNECTOR_OVERLAP}
                 y1={worksTop + selectedProjectIndex * projectStride + projectHeight / 2}
                 x2={detailColumnLeft + CONNECTOR_OVERLAP}
-                y2={worksTop + selectedProjectIndex * projectStride + detailHeight / 2}
+                y2={worksTop + selectedProjectIndex * projectStride + activeDetailHeight / 2}
                 delay={0}
                 color={connectorColor}
                 strokeWidth={3}
@@ -1644,9 +1727,10 @@ export function Canvas() {
               ref={detailPanelRef}
               className="relative shrink-0"
               style={{
+                marginLeft: stationGutter,
                 marginTop: selectedProjectIndex * projectStride,
                 width: detailWidth,
-                height: detailHeight,
+                height: activeDetailHeight,
                 pointerEvents: 'auto',
               }}
               onMouseEnter={() => setIsHoveringDetail(true)}
