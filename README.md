@@ -54,4 +54,5 @@ You usually only need these 2 commands:
 cd /Users/yardensalansky/Desktop/potfolio/portfolio_yarden_website
 npm run dev
 ```
+yarden 
   
