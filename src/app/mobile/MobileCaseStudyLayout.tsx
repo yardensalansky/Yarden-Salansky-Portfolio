@@ -2,11 +2,16 @@ import type { ReactNode } from 'react';
 import { CaseStudyMetaRow } from '../components/caseStudy/CaseStudyMetaRow';
 import { NextProjectFooter } from '../components/caseStudy/NextProjectFooter';
 
+export { MobileCaseStudyImageCarousel } from './MobileCaseStudyImageCarousel';
+
 interface MobileCaseStudyStackProps {
   children: ReactNode;
   onNextProject?: () => void;
   className?: string;
 }
+
+/** Even vertical gap between text, images, and media blocks. */
+const MOBILE_SECTION_GAP = 'gap-8';
 
 /** Vertical mobile case study — full-width media, readable body copy (no Figma scale). */
 export function MobileCaseStudyStack({
@@ -15,7 +20,7 @@ export function MobileCaseStudyStack({
   className = 'bg-white',
 }: MobileCaseStudyStackProps) {
   return (
-    <div className={`flex w-full flex-col ${className}`}>
+    <div className={`flex w-full flex-col ${MOBILE_SECTION_GAP} ${className}`}>
       {children}
       {onNextProject ? (
         <NextProjectFooter
@@ -77,7 +82,7 @@ export function MobileCaseStudyHero({
 export function MobileCaseStudyIntro({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
     <p
-      className={`px-4 pb-4 pt-6 font-['Satoshi'] text-sm font-bold leading-relaxed ${dark ? 'text-white' : 'text-stone-950'}`}
+      className={`m-0 px-4 font-['Satoshi'] text-sm font-bold leading-relaxed ${dark ? 'text-white' : 'text-stone-950'}`}
     >
       {children}
     </p>
@@ -109,7 +114,7 @@ export function MobileCaseStudyMeta({
 
 export function MobileCaseStudyBody({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <p className={`px-4 py-2 font-['Satoshi'] text-sm font-medium leading-relaxed text-black ${className}`}>
+    <p className={`m-0 px-4 font-['Satoshi'] text-sm font-medium leading-relaxed text-black ${className}`}>
       {children}
     </p>
   );
@@ -118,17 +123,22 @@ export function MobileCaseStudyBody({ children, className = '' }: { children: Re
 export function MobileCaseStudyQuote({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
     <blockquote
-      className={`px-5 py-8 text-center font-['Satoshi'] text-base font-bold leading-relaxed ${dark ? 'text-white' : 'text-black'}`}
+      className={`m-0 px-5 text-center font-['Satoshi'] text-base font-bold leading-relaxed ${dark ? 'text-white' : 'text-black'}`}
     >
       {children}
     </blockquote>
   );
 }
 
+/** Groups a heading and copy block so spacing to images stays even. */
+export function MobileCaseStudySection({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return <div className={`flex flex-col gap-3 ${className}`.trim()}>{children}</div>;
+}
+
 export function MobileCaseStudyHeading({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
     <h2
-      className={`px-4 pt-8 font-['Clash_Grotesk'] text-xl font-semibold tracking-[0.12em] ${dark ? 'text-white' : 'text-black'}`}
+      className={`m-0 px-4 font-['Clash_Grotesk'] text-xl font-semibold tracking-[0.12em] ${dark ? 'text-white' : 'text-black'}`}
     >
       {children}
     </h2>
@@ -138,20 +148,60 @@ export function MobileCaseStudyHeading({ children, dark = false }: { children: R
 export function MobileCaseStudyCopy({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
     <p
-      className={`px-4 pb-4 pt-2 font-['Satoshi'] text-sm font-normal leading-relaxed ${dark ? 'text-white/90' : 'text-black'}`}
+      className={`m-0 px-4 font-['Satoshi'] text-sm font-normal leading-relaxed ${dark ? 'text-white/90' : 'text-black'}`}
     >
       {children}
     </p>
   );
 }
 
-export function MobileCaseStudyImage({ src, alt = '' }: { src: string; alt?: string }) {
+export function MobileCaseStudyImage({
+  src,
+  alt = '',
+  aspect = 'auto',
+  objectPosition = 'center',
+  objectPositionY,
+}: {
+  src: string;
+  alt?: string;
+  /** Square crops full width; use objectPosition to anchor the visible area. */
+  aspect?: 'auto' | 'square';
+  objectPosition?: 'center' | 'top' | 'bottom';
+  /** Vertical crop focal point (0–100). Higher values cut more from the top. */
+  objectPositionY?: number;
+}) {
+  const positionClass =
+    objectPositionY === undefined
+      ? objectPosition === 'top'
+        ? 'object-top'
+        : objectPosition === 'bottom'
+          ? 'object-bottom'
+          : 'object-center'
+      : '';
+  const positionStyle =
+    objectPositionY !== undefined ? { objectPosition: `center ${objectPositionY}%` } : undefined;
+
+  if (aspect === 'square') {
+    return (
+      <div className="aspect-square w-full overflow-hidden">
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          style={positionStyle}
+          className={`block h-full w-full object-cover ${positionClass}`}
+        />
+      </div>
+    );
+  }
+
   return (
     <img
       src={src}
       alt={alt}
       loading="lazy"
-      className="block w-full object-cover"
+      style={positionStyle}
+      className={`block w-full object-cover ${positionClass}`}
     />
   );
 }
@@ -187,7 +237,7 @@ export function MobileCaseStudyVideo({
 export function MobileCaseStudyLabel({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
     <p
-      className={`px-4 pt-4 font-['Satoshi'] text-xs font-medium uppercase tracking-wide ${dark ? 'text-white/60' : 'text-neutral-500'}`}
+      className={`m-0 px-4 font-['Satoshi'] text-xs font-medium uppercase tracking-wide ${dark ? 'text-white/60' : 'text-neutral-500'}`}
     >
       {children}
     </p>

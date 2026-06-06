@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { animateScrollLeft } from './animateScrollLeft';
 import { animate, AnimatePresence, motion, useMotionValue } from 'motion/react';
-import { Home, Moon, Sun } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { useViewportSize } from '../../hooks/useViewportSize';
 import {
   computeHeroCardSize,
@@ -25,7 +25,6 @@ export function MobileApp() {
   const [explored, setExplored] = useState(false);
   const [exploreSeq, setExploreSeq] = useState(0);
   const [detailId, setDetailId] = useState<MobileProjectId | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [playBrainOpen, setPlayBrainOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
 
@@ -39,8 +38,8 @@ export function MobileApp() {
   const stationGutter = useMemo(() => computeMobileStationGutter(vw), [vw]);
   const cardGap = useMemo(() => computeMobileCardGap(vw), [vw]);
 
-  const connectorColor = isDarkMode ? '#4a4a4a' : '#b8b8b8';
-  const gridColor = isDarkMode ? '#333333' : '#d4d4d4';
+  const connectorColor = '#b8b8b8';
+  const gridColor = '#d4d4d4';
 
   const handleExplore = useCallback(() => {
     setExplored(true);
@@ -142,39 +141,27 @@ export function MobileApp() {
   }, [detailId, playBrainOpen, aboutOpen]);
 
   const sheetOpen = detailId !== null;
-  const canvasBg = isDarkMode ? '#141414' : '#e8e8ea';
-  const heroRing = isDarkMode ? 'ring-white/10' : 'ring-black/[0.07]';
+  const canvasBg = '#e8e8ea';
+  const heroRing = 'ring-black/[0.07]';
 
   return (
     <div
       className="fixed inset-0 z-[150] overflow-hidden transition-colors duration-500"
       style={{ backgroundColor: !explored ? '#000000' : canvasBg }}
     >
-      <div className="absolute right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-[160] flex flex-row items-center gap-2">
-        <button
-          type="button"
-          onClick={handleHome}
-          className="flex h-9 w-9 items-center justify-center rounded-full shadow-lg touch-manipulation"
-          style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#ffffff' }}
-          aria-label="Home — back to first screen"
-          title="Home"
-        >
-          <Home className={`h-4 w-4 ${isDarkMode ? 'text-neutral-200' : 'text-neutral-700'}`} />
-        </button>
-        <button
-          type="button"
-          onClick={() => setIsDarkMode((d) => !d)}
-          className="flex h-9 w-9 items-center justify-center rounded-full shadow-lg touch-manipulation"
-          style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#ffffff' }}
-          aria-label="Toggle theme"
-        >
-          {isDarkMode ? (
-            <Sun className="h-4 w-4 text-amber-300" />
-          ) : (
-            <Moon className="h-4 w-4 text-neutral-700" />
-          )}
-        </button>
-      </div>
+      {!sheetOpen ? (
+        <div className="absolute right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-[160]">
+          <button
+            type="button"
+            onClick={handleHome}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-lg touch-manipulation"
+            aria-label="Home — back to first screen"
+            title="Home"
+          >
+            <Home className="h-4 w-4 text-neutral-700" />
+          </button>
+        </div>
+      ) : null}
 
       <div
         className={`relative z-[20] flex h-[100dvh] w-full max-w-full flex-col overflow-hidden pt-0 ${
@@ -269,6 +256,7 @@ export function MobileApp() {
             <MobileCanvasProjectDetail
               projectId={detailId}
               onClose={closeDetail}
+              onHome={handleHome}
               onNextProject={handleNextProject}
             />
           </motion.div>
@@ -277,21 +265,13 @@ export function MobileApp() {
 
       <AnimatePresence>
         {playBrainOpen && (
-          <MobilePlayBrainModal
-            key="play-brain"
-            isDarkMode={isDarkMode}
-            onClose={() => setPlayBrainOpen(false)}
-          />
+          <MobilePlayBrainModal key="play-brain" isDarkMode={false} onClose={() => setPlayBrainOpen(false)} />
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {aboutOpen && (
-          <MobileAboutModal
-            key="about"
-            isDarkMode={isDarkMode}
-            onClose={() => setAboutOpen(false)}
-          />
+          <MobileAboutModal key="about" isDarkMode={false} onClose={() => setAboutOpen(false)} />
         )}
       </AnimatePresence>
     </div>

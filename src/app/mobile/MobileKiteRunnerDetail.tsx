@@ -7,7 +7,7 @@ import {
   MobileCaseStudyIntro,
   MobileCaseStudyLabel,
   MobileCaseStudyMeta,
-  MobileCaseStudySpacer,
+  MobileCaseStudySection,
   MobileCaseStudyStack,
   MobileCaseStudyVideo,
 } from './MobileCaseStudyLayout';
@@ -39,39 +39,48 @@ export function MobileKiteRunnerDetail({ onNextProject }: { onNextProject?: () =
       <MobileCaseStudyMeta year="2026" client="Student Project" field="Motion" />
 
       <MobileCaseStudyVideo src={video1} />
-      <MobileCaseStudySpacer />
 
-      <MobileCaseStudyHeading>Inspiration</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy>
-        The visual language draws from Afghan ceramic tilework, found in both domestic spaces and religious architecture,
-        such as the Blue Mosque. At first, the tiles reflect order, beauty, and stability. As the sequence progresses,
-        they begin to deteriorate becoming worn and fragmented. This erosion gradually reveals what lies beneath: raw
-        clay surfaces, inspired by the materiality of homes in Kabul.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading>Inspiration</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy>
+          The visual language draws from Afghan ceramic tilework, found in both domestic spaces and religious architecture,
+          such as the Blue Mosque. At first, the tiles reflect order, beauty, and stability. As the sequence progresses,
+          they begin to deteriorate becoming worn and fragmented. This erosion gradually reveals what lies beneath: raw
+          clay surfaces, inspired by the materiality of homes in Kabul.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
       <MobileCaseStudyImage src={inspirationStill} alt="Ceramic tile inspiration" />
 
-      <MobileCaseStudyHeading>Concept</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy>
-        <span className="font-bold">Memory and Loss. What Once Was, and Is No More</span>
-        <br />
-        <br />
-        The tiles act as both a visual and conceptual system. They represent something structured and enduring, yet
-        inherently fragile. Their gradual erosion reflects the nature of memory, fading over time, becoming distorted,
-        and remaining only in fragments. Rather than telling a linear story, the sequence presents memory as something
-        subjective — blurred, layered, and emotionally charged.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading>Concept</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy>
+          <span className="font-bold">Memory and Loss. What Once Was, and Is No More</span>
+          <br />
+          <br />
+          The tiles act as both a visual and conceptual system. They represent something structured and enduring, yet
+          inherently fragile. Their gradual erosion reflects the nature of memory, fading over time, becoming distorted,
+          and remaining only in fragments. Rather than telling a linear story, the sequence presents memory as something
+          subjective — blurred, layered, and emotionally charged.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
 
-      <MobileCaseStudyLabel>First sense</MobileCaseStudyLabel>
-      <MobileCaseStudyImage src={conceptFirst} alt="First sense frame" />
-      <MobileCaseStudyLabel>Last sense</MobileCaseStudyLabel>
-      <MobileCaseStudyImage src={conceptLast} alt="Last sense frame" />
+      <MobileCaseStudySection className="gap-2">
+        <MobileCaseStudyLabel>First sense</MobileCaseStudyLabel>
+        <MobileCaseStudyImage src={conceptFirst} alt="First sense frame" />
+      </MobileCaseStudySection>
+      <MobileCaseStudySection className="gap-2">
+        <MobileCaseStudyLabel>Last sense</MobileCaseStudyLabel>
+        <MobileCaseStudyImage src={conceptLast} alt="Last sense frame" />
+      </MobileCaseStudySection>
 
-      <MobileCaseStudyHeading>Experience</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy>
-        The sequence moves from calm and harmony into subtle decay. A slow pace allows the transformation to unfold
-        gradually, while Afghan music introduces softness and restraint — creating a contrast between visual
-        deterioration and emotional control.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading>Experience</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy>
+          The sequence moves from calm and harmony into subtle decay. A slow pace allows the transformation to unfold
+          gradually, while Afghan music introduces softness and restraint — creating a contrast between visual
+          deterioration and emotional control.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
       <MobileCaseStudyImage src={experienceStill} alt="Experience still" />
 
       <MobileCaseStudyHeading>Style frames</MobileCaseStudyHeading>

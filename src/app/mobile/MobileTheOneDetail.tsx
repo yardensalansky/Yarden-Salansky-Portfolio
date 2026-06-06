@@ -7,7 +7,7 @@ import {
   MobileCaseStudyIntro,
   MobileCaseStudyMeta,
   MobileCaseStudyQuote,
-  MobileCaseStudySpacer,
+  MobileCaseStudySection,
   MobileCaseStudyStack,
   MobileCaseStudyVideo,
 } from './MobileCaseStudyLayout';
@@ -36,13 +36,15 @@ export function MobileTheOneDetail({ onNextProject }: { onNextProject?: () => vo
 
       <MobileCaseStudyMeta year="2026" client="Student Project" field="Website" dark />
 
-      <MobileCaseStudyHeading dark>Concept</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy dark>
-        An elite brand built around a single idea: perfection does not require options. A luxury e-commerce experience
-        centered on one product — <span className="font-bold">The One.</span> A wig designed to define identity,
-        presence, and control. The One is not a product. It is a gatekeeper. By placing the same form on iconic
-        figures, the project suggests that identity is shaped by what is approved and recognized.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading dark>Concept</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy dark>
+          An elite brand built around a single idea: perfection does not require options. A luxury e-commerce experience
+          centered on one product — <span className="font-bold">The One.</span> A wig designed to define identity,
+          presence, and control. The One is not a product. It is a gatekeeper. By placing the same form on iconic
+          figures, the project suggests that identity is shaped by what is approved and recognized.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
 
       <MobileCaseStudyImage src={imgAnnaWintourHair} alt="Anna Wintour" />
       <MobileCaseStudyCopy dark>
@@ -50,44 +52,51 @@ export function MobileTheOneDetail({ onNextProject }: { onNextProject?: () => vo
         fashion industry. Her signature look became a symbol of authority, precision, and control.
       </MobileCaseStudyCopy>
       <MobileCaseStudyImage src={imgAnnaWintourPortrait} alt="Anna Wintour portrait" />
-      <MobileCaseStudySpacer />
 
-      <MobileCaseStudyHeading dark>Experience</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy dark>
-        Access to The One is not always available. The experience begins with distance — users can only observe. Iconic
-        figures appear throughout the site, suggesting a history shaped by The One. Only at specific moments does access
-        open. Through the camera, the system determines alignment. Access is either granted or denied. Not everyone
-        gets to belong.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading dark>Experience</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy dark>
+          Access to The One is not always available. The experience begins with distance — users can only observe. Iconic
+          figures appear throughout the site, suggesting a history shaped by The One. Only at specific moments does access
+          open. Through the camera, the system determines alignment. Access is either granted or denied. Not everyone
+          gets to belong.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
       <MobileCaseStudyImage src={imgMonaLaptopMockup} alt="Experience screens" />
       <MobileCaseStudyImage src={imgClientsLaptopMockup} alt="Client selection flow" />
       <MobileCaseStudyImage src={imgExperiencePanelsStrip} alt="Experience panels" />
 
-      <MobileCaseStudyHeading dark>Visual Language</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy dark>
-        The visual language is minimal, controlled, and editorial. A restrained black-and-white palette creates a sense
-        of distance, precision, and authority. Typography is dominant and directive. Close-up product imagery emphasizes
-        detail and control.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading dark>Visual Language</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy dark>
+          The visual language is minimal, controlled, and editorial. A restrained black-and-white palette creates a sense
+          of distance, precision, and authority. Typography is dominant and directive. Close-up product imagery emphasizes
+          detail and control.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
       <MobileCaseStudyImage src={imgWigConstruction} alt="Wig construction detail" />
 
-      <MobileCaseStudyHeading dark>Interaction</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy dark>
-        The experience unfolds as a structured purchase journey from a single product selection to guided steps of
-        customization and measurement. It concludes with a real-time facial verification — the outcome is binary,
-        accepted or rejected.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading dark>Interaction</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy dark>
+          The experience unfolds as a structured purchase journey from a single product selection to guided steps of
+          customization and measurement. It concludes with a real-time facial verification — the outcome is binary,
+          accepted or rejected.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
       <MobileCaseStudyImage src={imgInteractionFlow} alt="Interaction flow" />
       <MobileCaseStudyVideo src={CLOUDINARY_VIDEOS.the_one_cover} />
 
       <MobileCaseStudyHeading dark>Becoming Iconic</MobileCaseStudyHeading>
       <MobileCaseStudyImage src={imgBecomingIconicGrid} alt="Becoming iconic grid" />
 
-      <MobileCaseStudyHeading dark>The Edition</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy dark>
-        This catalog functions as an archive, bringing together iconic figures redefined through The One. Each image
-        preserves a moment where identity is shaped by a single, controlled form.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading dark>The Edition</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy dark>
+          This catalog functions as an archive, bringing together iconic figures redefined through The One. Each image
+          preserves a moment where identity is shaped by a single, controlled form.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
       <MobileCaseStudyImage src={imgTheEditionMagazineLeft} alt="Magazine cover" />
       <MobileCaseStudyImage src={imgTheEditionMagazineRight} alt="Magazine cover alternate" />
 

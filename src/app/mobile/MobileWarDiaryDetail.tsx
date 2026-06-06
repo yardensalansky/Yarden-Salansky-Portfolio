@@ -5,10 +5,11 @@ import {
   MobileCaseStudyHeading,
   MobileCaseStudyHero,
   MobileCaseStudyImage,
+  MobileCaseStudyImageCarousel,
   MobileCaseStudyIntro,
   MobileCaseStudyMeta,
   MobileCaseStudyQuote,
-  MobileCaseStudySpacer,
+  MobileCaseStudySection,
   MobileCaseStudyStack,
   MobileCaseStudyVideo,
 } from './MobileCaseStudyLayout';
@@ -22,10 +23,16 @@ const imgGalleryRight =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775756263/a6bbf11e62097685360dd84128d5d2ac402524cb_ubqlhg.jpg';
 const imgEmotion =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775756266/d814f663320e2e4fa2db0c78fda37a584fab5585_hks5b7.png';
-const imgDesign = 'https://res.cloudinary.com/drqk65xwl/image/upload/v1775805100/S_D04554_1_zfjqc4.png';
 const imgUiStripe = C.wardiary_ui_stripe;
 const imgCatalog =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775811144/FullSizeRender_zhcvjj.png';
+
+const warDiaryGalleryImages = [
+  { src: imgGalleryLeft, alt: 'War Diary gallery' },
+  { src: imgGalleryMiddle, alt: 'War Diary gallery' },
+  { src: imgGalleryRight, alt: 'War Diary gallery' },
+  { src: imgEmotion, alt: 'Diary pages' },
+];
 
 /**
  * War Diary — mobile-native vertical layout (same content & assets as desktop Frame297).
@@ -49,57 +56,62 @@ export function MobileWarDiaryDetail({ onNextProject }: { onNextProject?: () => 
       <MobileCaseStudyMeta year="2025" client="Student Project" field="Web & Print" />
 
       <MobileCaseStudyImage src={imgOverview} alt="War Diary overview" />
-      <MobileCaseStudySpacer />
 
-      <MobileCaseStudyImage src={imgResearch} alt="War Diary research spread" />
       <MobileCaseStudyBody>
         This project explores the emotional experience of war focusing on memory, uncertainty, and repetition. Rather
         than documenting events, it reflects how moments are experienced, fragmented, and internalized by the people
         living them.
       </MobileCaseStudyBody>
-
-      <MobileCaseStudySpacer />
-      <MobileCaseStudyImage src={imgGalleryLeft} alt="" />
-      <MobileCaseStudyImage src={imgGalleryMiddle} alt="" />
-      <MobileCaseStudyImage src={imgGalleryRight} alt="" />
-      <MobileCaseStudySpacer />
+      <MobileCaseStudyImage
+        src={imgResearch}
+        alt="War Diary research spread"
+        aspect="square"
+        objectPositionY={32}
+      />
 
       <MobileCaseStudyQuote>
         To make personal wartime experiences accessible while preserving their emotional depth. The project aims to
         create a space for connection, where viewers can relate, reflect, and feel less alone.
       </MobileCaseStudyQuote>
 
-      <MobileCaseStudyImage src={imgEmotion} alt="Diary pages" />
-      <MobileCaseStudySpacer />
+      <MobileCaseStudyImageCarousel images={warDiaryGalleryImages} aspect="5/6" />
 
-      <MobileCaseStudyImage src={imgDesign} alt="Interface design" />
-
-      <MobileCaseStudyHeading>Design choice</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy>
-        To transform raw wartime documentation into an accessible digital archive, I designed a time based navigation
-        system. The interface allows users to filter content chronologically (by months and specific dates) while
-        transitioning from a structured, macro level overview into an intimate, immersive view of individual diary
-        entries.
-        <br />
-        <br />
-        The UX challenges included balancing heavy media load with a seamless, intuitive browsing experience.
-      </MobileCaseStudyCopy>
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading>Design choice</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy>
+          To transform raw wartime documentation into an accessible digital archive, I designed a time based navigation
+          system. The interface allows users to filter content chronologically (by months and specific dates) while
+          transitioning from a structured, macro level overview into an intimate, immersive view of individual diary
+          entries.
+          <br />
+          <br />
+          The UX challenges included balancing heavy media load with a seamless, intuitive browsing experience.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
 
       <MobileCaseStudyVideo src={CLOUDINARY_VIDEOS.wardiary_video1} />
 
-      <MobileCaseStudyImage src={imgUiStripe} alt="Website UI screens" />
+      <MobileCaseStudyImageCarousel
+        stripe={{
+          src: imgUiStripe,
+          slices: 3,
+          alt: 'Website UI screen',
+          panelAspectRatio: '4099/2763',
+        }}
+      />
 
       <MobileCaseStudyHeading>Full Website</MobileCaseStudyHeading>
       <MobileCaseStudyVideo src={CLOUDINARY_VIDEOS.wardiary_video22_2} />
 
+      <MobileCaseStudySection>
+        <MobileCaseStudyHeading>Catalog</MobileCaseStudyHeading>
+        <MobileCaseStudyCopy>
+          The printed catalog translates the digital archive into a physical format. It preserves the same sense of
+          intimacy allowing moments to be held, revisited, and experienced at a slower pace. The sequence of images and
+          texts creates a quiet rhythm, where each spread becomes a fragment of a larger narrative.
+        </MobileCaseStudyCopy>
+      </MobileCaseStudySection>
       <MobileCaseStudyImage src={imgCatalog} alt="Printed catalog" />
-
-      <MobileCaseStudyHeading>Catalog</MobileCaseStudyHeading>
-      <MobileCaseStudyCopy>
-        The printed catalog translates the digital archive into a physical format. It preserves the same sense of
-        intimacy allowing moments to be held, revisited, and experienced at a slower pace. The sequence of images and
-        texts creates a quiet rhythm, where each spread becomes a fragment of a larger narrative.
-      </MobileCaseStudyCopy>
     </MobileCaseStudyStack>
   );
 }

@@ -1,3 +1,4 @@
+import { Home } from 'lucide-react';
 import { CloseCircleButton } from '../components/CloseCircleButton';
 import type { MobileProjectId } from './mobileProjects';
 import { MOBILE_PROJECTS } from './mobileProjects';
@@ -9,6 +10,7 @@ import { MobileWarDiaryDetail } from './MobileWarDiaryDetail';
 interface MobileCanvasProjectDetailProps {
   projectId: MobileProjectId;
   onClose: () => void;
+  onHome: () => void;
   onNextProject?: () => void;
 }
 
@@ -40,6 +42,7 @@ function CaseStudyBody({
 export function MobileCanvasProjectDetail({
   projectId,
   onClose,
+  onHome,
   onNextProject,
 }: MobileCanvasProjectDetailProps) {
   const meta = MOBILE_PROJECTS.find((p) => p.id === projectId);
@@ -60,13 +63,24 @@ export function MobileCanvasProjectDetail({
       <span id="mobile-detail-title" className="sr-only">
         {meta.title}
       </span>
-      <CloseCircleButton
-        size="lg"
-        className="absolute right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-50 touch-manipulation"
-        onClick={onClose}
-        aria-label="Close"
-        title="Close"
-      />
+      <div className="absolute right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-50 flex flex-col gap-2">
+        <CloseCircleButton
+          size="lg"
+          className="touch-manipulation"
+          onClick={onClose}
+          aria-label="Close"
+          title="Close"
+        />
+        <button
+          type="button"
+          onClick={onHome}
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/15 bg-white/92 text-black shadow-md backdrop-blur-sm transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 touch-manipulation"
+          aria-label="Home — back to first screen"
+          title="Home"
+        >
+          <Home size={20} strokeWidth={2.25} className="block shrink-0" aria-hidden />
+        </button>
+      </div>
       <div
         className={`min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain ${
           dark ? 'bg-black' : 'bg-white'
