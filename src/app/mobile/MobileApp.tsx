@@ -2,11 +2,11 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { animateScrollLeft } from './animateScrollLeft';
 import { animate, AnimatePresence, motion, useMotionValue } from 'motion/react';
 import { Home, Moon, Sun } from 'lucide-react';
-import { CurvedLine } from '../components/CurvedLine';
 import { useViewportSize } from '../../hooks/useViewportSize';
 import {
   computeHeroCardSize,
-  computeMobileDetailPanelWidth,
+  computeMobileCardGap,
+  computeMobileStationGutter,
   computeWorkCardSize,
 } from './mobileCanvasLayout';
 import { MobileAboutModal } from './MobileAboutModal';
@@ -17,17 +17,14 @@ import { MobilePlayBrainModal } from './MobilePlayBrainModal';
 import { MOBILE_PROJECTS, type MobileProjectId } from './mobileProjects';
 
 /**
- * Explore opens a horizontal hub (hero left → lines right → works). Project detail is a real column to the right;
- * opening it scrolls the canvas to center that panel and draws a connector from the work card.
+ * Explore opens a horizontal hub (hero left → lines right → works). Project detail is a full-screen sheet
+ * so 1400px case studies stay readable instead of being crushed into a side column.
  */
 export function MobileApp() {
   const { width: vw, height: vh } = useViewportSize();
   const [explored, setExplored] = useState(false);
   const [exploreSeq, setExploreSeq] = useState(0);
   const [detailId, setDetailId] = useState<MobileProjectId | null>(null);
-  const [detailLine, setDetailLine] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(
-    null
-  );
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [playBrainOpen, setPlayBrainOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -35,16 +32,15 @@ export function MobileApp() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const hScrollRef = useRef<HTMLDivElement>(null);
   const panAbortRef = useRef<AbortController | null>(null);
-  const prevViewportRef = useRef({ w: vw, h: vh });
   const worldScale = useMotionValue(1);
 
   const { heroW, heroH } = useMemo(() => computeHeroCardSize(vw, vh), [vw, vh]);
   const { workW, workH } = useMemo(() => computeWorkCardSize(vw), [vw]);
-  const stationGutter = useMemo(() => Math.round(Math.max(44, Math.min(104, vw * 0.12))), [vw]);
-  const detailPanelW = useMemo(() => computeMobileDetailPanelWidth(vw), [vw]);
-  const detailHubGap = useMemo(() => Math.round(Math.max(24, Math.min(48, vw * 0.07))), [vw]);
+  const stationGutter = useMemo(() => computeMobileStationGutter(vw), [vw]);
+  const cardGap = useMemo(() => computeMobileCardGap(vw), [vw]);
 
   const connectorColor = isDarkMode ? '#4a4a4a' : '#b8b8b8';
+  const gridColor = isDarkMode ? '#333333' : '#d4d4d4';
 
   const handleExplore = useCallback(() => {
     setExplored(true);
@@ -55,7 +51,6 @@ export function MobileApp() {
     panAbortRef.current?.abort();
     setExplored(false);
     setDetailId(null);
-    setDetailLine(null);
     setPlayBrainOpen(false);
     setAboutOpen(false);
     worldScale.set(1);
@@ -95,108 +90,6 @@ export function MobileApp() {
     };
   }, [explored, exploreSeq, worldScale, heroW, stationGutter]);
 
-  /** Horizontally centers the detail panel on the device screen (viewport center). */
-  const scrollToCenterDetailPanel = useCallback(
-    async (sc: HTMLDivElement, signal: AbortSignal, durationMs: number) => {
-      const maxS = Math.max(0, sc.scrollWidth - sc.clientWidth);
-      if (maxS < 4) return;
-      const screenCx = window.innerWidth * 0.5;
-      const panelEl = document.querySelector<HTMLElement>('[data-mobile-detail-panel]');
-      let target: number;
-      if (panelEl) {
-        const pRect = panelEl.getBoundingClientRect();
-        const panelCx = pRect.left + pRect.width / 2;
-        target = Math.max(0, Math.min(maxS, sc.scrollLeft + (panelCx - screenCx)));
-      } else {
-        const scRect = sc.getBoundingClientRect();
-        const padStart = 12 + 4;
-        const clusterLayoutW = heroW + stationGutter + workW;
-        const detailCenterInContent = padStart + clusterLayoutW + detailHubGap + detailPanelW / 2;
-        target = Math.max(0, Math.min(maxS, detailCenterInContent + scRect.left - screenCx));
-      }
-      await animateScrollLeft(sc, target, durationMs, signal);
-    },
-    [detailHubGap, detailPanelW, heroW, stationGutter, workW]
-  );
-
-  const commitDetailLine = useCallback((id: MobileProjectId, workFallback?: DOMRect) => {
-    const workEl = document.querySelector<HTMLElement>(`[data-mobile-work="${id}"]`);
-    const panelEl = document.querySelector<HTMLElement>('[data-mobile-detail-panel]');
-    if (!panelEl) return;
-    const rWork = workEl?.getBoundingClientRect() ?? workFallback;
-    if (!rWork) return;
-    const rPanel = panelEl.getBoundingClientRect();
-    setDetailLine({
-      x1: rWork.left + rWork.width * 0.72,
-      y1: rWork.top + rWork.height * 0.5,
-      x2: rPanel.left + rPanel.width * 0.05,
-      y2: rPanel.top + rPanel.height * 0.4,
-    });
-  }, []);
-
-  const openDetail = useCallback(
-    async (id: MobileProjectId, rect: DOMRect) => {
-      panAbortRef.current?.abort();
-      const ac = new AbortController();
-      panAbortRef.current = ac;
-
-      setDetailLine(null);
-      setDetailId(id);
-
-      await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
-      if (ac.signal.aborted) return;
-
-      const sc = hScrollRef.current;
-      if (sc) {
-        try {
-          await scrollToCenterDetailPanel(sc, ac.signal, 840);
-        } catch {
-          /* aborted */
-        }
-      }
-
-      if (ac.signal.aborted) return;
-
-      await new Promise<void>((r) => requestAnimationFrame(() => r()));
-      commitDetailLine(id, rect);
-    },
-    [commitDetailLine, scrollToCenterDetailPanel]
-  );
-
-  useLayoutEffect(() => {
-    if (!detailId || !explored) {
-      prevViewportRef.current = { w: vw, h: vh };
-      return;
-    }
-    const prev = prevViewportRef.current;
-    const viewportChanged = prev.w !== vw || prev.h !== vh;
-    prevViewportRef.current = { w: vw, h: vh };
-    if (!viewportChanged) return;
-
-    const sc = hScrollRef.current;
-    if (!sc) return;
-
-    panAbortRef.current?.abort();
-    const ac = new AbortController();
-    panAbortRef.current = ac;
-
-    const id = detailId;
-    void (async () => {
-      await new Promise<void>((r) => requestAnimationFrame(() => r()));
-      if (ac.signal.aborted) return;
-      try {
-        await scrollToCenterDetailPanel(sc, ac.signal, 420);
-      } catch {
-        /* aborted */
-      }
-      if (ac.signal.aborted) return;
-      await new Promise<void>((r) => requestAnimationFrame(() => r()));
-      commitDetailLine(id);
-    })();
-
-    return () => ac.abort();
-  }, [vw, vh, detailId, explored, scrollToCenterDetailPanel, commitDetailLine]);
-
   const scrollToWorksHub = useCallback(
     async (signal: AbortSignal, durationMs = 620) => {
       const sc = hScrollRef.current;
@@ -212,8 +105,12 @@ export function MobileApp() {
     [heroW, stationGutter]
   );
 
+  const openDetail = useCallback((id: MobileProjectId) => {
+    panAbortRef.current?.abort();
+    setDetailId(id);
+  }, []);
+
   const closeDetail = useCallback(() => {
-    setDetailLine(null);
     setDetailId(null);
     panAbortRef.current?.abort();
     const ac = new AbortController();
@@ -226,33 +123,13 @@ export function MobileApp() {
     });
   }, [scrollToWorksHub]);
 
-  const handleNextProject = useCallback(async () => {
+  const handleNextProject = useCallback(() => {
     if (!detailId) return;
     const currentIndex = MOBILE_PROJECTS.findIndex((p) => p.id === detailId);
     if (currentIndex < 0) return;
-
     const nextId = MOBILE_PROJECTS[(currentIndex + 1) % MOBILE_PROJECTS.length]!.id;
-
-    panAbortRef.current?.abort();
-    const ac = new AbortController();
-    panAbortRef.current = ac;
-
-    setDetailLine(null);
-    setDetailId(null);
-
-    await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
-    if (ac.signal.aborted) return;
-
-    await scrollToWorksHub(ac.signal, 620);
-    if (ac.signal.aborted) return;
-
-    await new Promise<void>((r) => window.setTimeout(() => r(), 80));
-    if (ac.signal.aborted) return;
-
-    const workEl = document.querySelector<HTMLElement>(`[data-mobile-work="${nextId}"]`);
-    if (!workEl) return;
-    await openDetail(nextId, workEl.getBoundingClientRect());
-  }, [detailId, openDetail, scrollToWorksHub]);
+    setDetailId(nextId);
+  }, [detailId]);
 
   useEffect(() => {
     if (detailId || playBrainOpen || aboutOpen) {
@@ -333,24 +210,25 @@ export function MobileApp() {
                 </div>
               </section>
             ) : (
-              <section
-                className={`flex min-h-[100dvh] w-full shrink-0 flex-col px-0 ${
-                  detailId
-                    ? 'justify-start pt-[calc(20px+env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]'
-                    : 'justify-center py-6'
-                }`}
-              >
+              <section className="relative flex min-h-[100dvh] w-full shrink-0 flex-col justify-center px-0 py-4">
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-60"
+                  aria-hidden
+                  style={{
+                    backgroundImage: `radial-gradient(circle, ${gridColor} 1px, transparent 1px)`,
+                    backgroundSize: '28px 28px',
+                  }}
+                />
                 <div
                   ref={hScrollRef}
-                  className="w-full overflow-x-auto overflow-y-visible overscroll-x-contain px-3 pb-[max(5rem,env(safe-area-inset-bottom))]"
-                  style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y' }}
+                  className="relative z-[1] w-full overflow-x-auto overflow-y-visible overscroll-x-contain px-4 pb-[max(4.5rem,env(safe-area-inset-bottom))]"
+                  style={{
+                    WebkitOverflowScrolling: 'touch',
+                    touchAction: 'pan-x pan-y',
+                    scrollPaddingInline: '16px',
+                  }}
                 >
-                  <div
-                    className={`inline-flex min-w-max justify-start pl-1 pr-12 ${
-                      detailId ? 'items-start pt-0' : 'items-center pt-1'
-                    }`}
-                    style={{ gap: detailHubGap }}
-                  >
+                  <div className="inline-flex min-w-max items-center justify-start pl-1 pr-12 pt-1">
                     <MobileHorizontalWorksCluster
                       hero={
                         <MobileHeroPortrait
@@ -364,31 +242,12 @@ export function MobileApp() {
                       workW={workW}
                       workH={workH}
                       gutter={stationGutter}
+                      cardGap={cardGap}
                       exploreSeq={exploreSeq}
                       connectorColor={connectorColor}
                       heroRing={heroRing}
-                      onSelectWork={openDetail}
+                      onSelectWork={(id) => openDetail(id)}
                     />
-                    <AnimatePresence>
-                      {detailId && (
-                        <motion.div
-                          key={detailId}
-                          data-mobile-detail-panel
-                          className="shrink-0"
-                          style={{ width: detailPanelW }}
-                          initial={{ opacity: 0.82 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0, transition: { duration: 0.22, ease: [0.4, 0, 1, 1] } }}
-                          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-                        >
-                          <MobileCanvasProjectDetail
-                            projectId={detailId}
-                            onClose={closeDetail}
-                            onNextProject={handleNextProject}
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </div>
                 </div>
               </section>
@@ -397,21 +256,24 @@ export function MobileApp() {
         </div>
       </div>
 
-      {detailLine && (
-        <div className="pointer-events-none fixed inset-0 z-[10]" aria-hidden>
-          <CurvedLine
-            key={`detail-line-${detailLine.x1}-${detailLine.y1}`}
-            x1={detailLine.x1}
-            y1={detailLine.y1}
-            x2={detailLine.x2}
-            y2={detailLine.y2}
-            delay={0.02}
-            color={connectorColor}
-            strokeWidth={3}
-            position="fixed"
-          />
-        </div>
-      )}
+      <AnimatePresence>
+        {detailId && (
+          <motion.div
+            key={detailId}
+            className="fixed inset-0 z-[140]"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <MobileCanvasProjectDetail
+              projectId={detailId}
+              onClose={closeDetail}
+              onNextProject={handleNextProject}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {playBrainOpen && (

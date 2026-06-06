@@ -33,7 +33,7 @@ export function MobileWorkCanvasCard({ project, index, workW, workH, onSelect }:
         data-mobile-work={project.id}
         onClick={(e) => onSelect(project.id, (e.currentTarget as HTMLButtonElement).getBoundingClientRect())}
         whileTap={{ scale: 0.98 }}
-        className="relative h-full w-full overflow-hidden rounded-2xl text-left shadow-2xl touch-manipulation"
+        className="relative h-full w-full overflow-hidden rounded-[22px] text-left shadow-[0_16px_40px_rgba(0,0,0,0.22)] ring-1 ring-black/10 touch-manipulation"
         style={{ cursor: 'pointer' }}
       >
         <div className="absolute inset-0">

@@ -3,10 +3,15 @@
  */
 export const DESKTOP_PROJECT_W = 700;
 export const DESKTOP_PROJECT_H = 450;
-export const MOBILE_CARD_GAP = 60;
+/** Default gap when viewport width is unknown (legacy gallery layout). */
+export const MOBILE_CARD_GAP = 52;
+
+export function computeMobileCardGap(vw: number): number {
+  return vw < 380 ? 44 : vw < 420 ? 52 : 60;
+}
 
 export function computeWorkCardSize(vw: number): { workW: number; workH: number } {
-  const workW = Math.min(Math.max(vw - 72, 240), 340);
+  const workW = Math.min(Math.max(vw - 48, 268), 360);
   const workH = workW * (DESKTOP_PROJECT_H / DESKTOP_PROJECT_W);
   return { workW, workH };
 }
@@ -15,8 +20,8 @@ export function computeWorkCardSize(vw: number): { workW: number; workH: number 
 const MOBILE_HERO_FRAME_ASPECT = 384 / 816.65;
 
 export function computeHeroCardSize(vw: number, vh: number): { heroW: number; heroH: number } {
-  const maxW = Math.min(vw * 0.94, 396);
-  const maxH = Math.min(vh * 0.88, 840);
+  const maxW = Math.min(vw * 0.9, 384);
+  const maxH = Math.min(vh * 0.86, 820);
   let heroW = maxW;
   let heroH = heroW / MOBILE_HERO_FRAME_ASPECT;
   if (heroH > maxH) {
@@ -26,7 +31,17 @@ export function computeHeroCardSize(vw: number, vh: number): { heroW: number; he
   return { heroW, heroH };
 }
 
-/** Inline project detail column to the right of the hub (matches mock proportions). */
+/** Full-width detail sheet — avoids crushing 1400px artboards into a narrow column. */
 export function computeMobileDetailPanelWidth(vw: number): number {
-  return Math.min(440, Math.max(300, Math.floor(vw * 0.88)));
+  return Math.max(320, vw);
+}
+
+/**
+ * Floor scale for 1400px case studies so body copy stays readable on phones (~15px+ effective).
+ * May introduce slight horizontal scroll inside the detail sheet.
+ */
+export const MOBILE_CASE_STUDY_MIN_SCALE = 0.3;
+
+export function computeMobileStationGutter(vw: number): number {
+  return Math.round(Math.max(36, Math.min(88, vw * 0.1)));
 }

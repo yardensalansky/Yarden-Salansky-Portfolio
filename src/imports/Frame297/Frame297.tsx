@@ -1,3 +1,4 @@
+import { CaseStudyMetaRow } from '../../app/components/caseStudy/CaseStudyMetaRow';
 import { CLOUDINARY_ASSETS as C, CLOUDINARY_VIDEOS } from '../../constants/cloudinaryAssets';
 
 const imgOverview = C['baa51197c9d32d0b48a2e85d0a42bf14e6462dfb'];
@@ -49,20 +50,7 @@ export default function Frame297() {
           The project translates raw, personal documentation into a structured visual experience both as a digital archive
           and a printed catalog.
         </div>
-        <div className="inline-flex justify-start items-center gap-20">
-          <div className="w-24 inline-flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">YEAR</div>
-            <div className="self-stretch justify-start text-black text-3xl font-black font-['Satoshi']">2025</div>
-          </div>
-          <div className="w-72 inline-flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">CLIENT</div>
-            <div className="w-80 justify-start text-black text-3xl font-black font-['Satoshi']">Student Project </div>
-          </div>
-          <div className="w-80 inline-flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-neutral-500 text-2xl font-bold font-['Satoshi']">DESIGN FIELD </div>
-            <div className="self-stretch justify-start text-black text-3xl font-black font-['Satoshi']">Web &amp; Print </div>
-          </div>
-        </div>
+        <CaseStudyMetaRow className="w-full shrink-0 self-stretch" year="2025" client="Student Project" field="Web & Print" />
       </div>
       <img className="w-[1400px] h-[737.97px] left-0 top-[926px] absolute object-cover" src={imgOverview} alt="" />
       <img className="w-[547px] h-[622px] left-0 top-[1774px] absolute object-cover" src={imgResearch} alt="" />

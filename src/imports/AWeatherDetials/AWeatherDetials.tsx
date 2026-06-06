@@ -1,6 +1,7 @@
 import React from 'react';
+import { CaseStudyMetaRow } from '../../app/components/caseStudy/CaseStudyMetaRow';
 
-export default function AWeatherDetials() {
+export default function AWeatherDetials({ mobileLayout = false }: { mobileLayout?: boolean }) {
   return (
     <div className="relative h-[9343.56px] w-[1400px] max-w-full min-w-0 overflow-hidden bg-white">
       {/* Intro + metadata: flush under 504px hero; equal space above/below headline; 10px above shell bottom (863px). */}
@@ -10,20 +11,7 @@ export default function AWeatherDetials() {
           A weather app inspired by Anna Wintour, designed to give clear direction instead of data.
         </div>
         <div className="min-h-0 flex-1" aria-hidden />
-        <div className="inline-flex shrink-0 items-center justify-start gap-20">
-          <div className="w-24 inline-flex flex-col items-start justify-start gap-4">
-            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">YEAR</div>
-            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">2026</div>
-          </div>
-          <div className="w-72 inline-flex flex-col items-start justify-start gap-4">
-            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">CLIENT</div>
-            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">Student Project </div>
-          </div>
-          <div className="w-80 inline-flex flex-col items-start justify-start gap-4">
-            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">DESIGN FIELD </div>
-            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">App </div>
-          </div>
-        </div>
+        <CaseStudyMetaRow className="w-full shrink-0 self-stretch" year="2026" client="Student Project" field="App" />
       </div>
       <img className="w-[1400px] h-[938.89px] left-0 top-[962.89px] absolute object-cover" src="https://res.cloudinary.com/drqk65xwl/image/upload/v1775756263/125b366da89efc73ab1d3613a8eb253638a4a84c_jbqbpq.png" alt="" />
       <div className="w-full left-0 top-[2004px] absolute text-center justify-start text-black text-4xl font-bold font-['Satoshi'] leading-10 tracking-[4px]">The app removes the need to interpret weather data. Instead, it delivers clear, authoritative direction<br />telling the user exactly what to do.</div>
@@ -42,7 +30,9 @@ export default function AWeatherDetials() {
         <span className="text-black text-2xl font-bold font-['Satoshi']">The app speaks in a clear, authoritative voice.<br /></span>
         <span className="text-black text-2xl font-normal font-['Satoshi']">Using direct typography, it tells the user exactly what to take from the forecast without leaving room for interpretation.<br />It doesn’t suggest it defines.<br />An added voice layer, inspired by Anna Wintour, reinforces this sense of control and direction.</span>
       </div>
-      <div className="w-[1420.22px] h-[504px] left-0 top-0 absolute bg-white overflow-hidden">
+      <div
+        className={`w-[1420.22px] h-[504px] left-0 top-0 absolute bg-white ${mobileLayout ? 'overflow-visible' : 'overflow-hidden'}`}
+      >
         <div className="w-[1417.81px] h-[891.33px] left-0 top-[-356.22px] absolute bg-stone-300 overflow-hidden">
           <img
             className="absolute inset-0 size-full object-cover object-right"

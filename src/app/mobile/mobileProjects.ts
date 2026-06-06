@@ -33,7 +33,7 @@ export const MOBILE_PROJECTS: MobileProjectMeta[] = [
     designField: 'Web & Print',
     introParagraphs: [
       'War Diary is an archival project based on photographs and texts by Shahar Dekel, a reserve tank soldier during the early stages of the Iron Swords War.',
-      'Rather than portraying soldiers as heroes, the project focuses on the person behind the uniform — the emotions, moments, and relationships within war.',
+      'Rather than portraying soldiers as heroes, the project focuses on the person behind the uniform the emotions, moments, and relationships within war.',
     ],
   },
   {

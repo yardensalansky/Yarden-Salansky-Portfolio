@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { CaseStudyMetaRow } from '../../app/components/caseStudy/CaseStudyMetaRow';
 import { CLOUDINARY_VIDEOS } from '../../constants/cloudinaryAssets';
 
 const hero =
@@ -13,7 +14,7 @@ const experienceStill =
 const styleFramesComposite =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775840518/Frame_297_kzvmkb.png';
 
-export default function TheKiteRunnerDetiales() {
+export default function TheKiteRunnerDetiales({ mobileLayout = false }: { mobileLayout?: boolean }) {
   const finalVideoWrapRef = useRef<HTMLDivElement>(null);
   const finalVideoRef = useRef<HTMLVideoElement>(null);
 
@@ -48,24 +49,12 @@ export default function TheKiteRunnerDetiales() {
           This project presents an opening sequence for a series adaptation of The Kite Runner.
         </div>
         <div className="min-h-0 flex-1" aria-hidden />
-        <div className="inline-flex shrink-0 -translate-y-[10px] items-center justify-start gap-20">
-          <div className="inline-flex w-24 flex-col items-start justify-start gap-4">
-            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">YEAR</div>
-            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">2026</div>
-          </div>
-          <div className="inline-flex w-64 flex-col items-start justify-start gap-4">
-            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">CLIENT</div>
-            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">
-              Student Project{' '}
-            </div>
-          </div>
-          <div className="inline-flex w-72 flex-col items-start justify-start gap-4">
-            <div className="self-stretch justify-start font-['Satoshi'] text-2xl font-bold text-neutral-500">
-              DESIGN FIELD{' '}
-            </div>
-            <div className="self-stretch justify-start font-['Satoshi'] text-3xl font-black text-black">Motion</div>
-          </div>
-        </div>
+        <CaseStudyMetaRow
+          className="w-full shrink-0 -translate-y-[10px] self-stretch"
+          year="2026"
+          client="Student Project"
+          field="Motion"
+        />
       </div>
 
       <div className="absolute left-[31px] top-[1517px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-black">
@@ -135,9 +124,11 @@ export default function TheKiteRunnerDetiales() {
         Last sense
       </div>
 
-      <div className="absolute left-0 top-0 h-[496.28px] w-full max-w-[1400px] overflow-hidden bg-white">
+      <div
+        className={`absolute left-0 top-0 h-[496.28px] w-full max-w-[1400px] bg-white ${mobileLayout ? 'overflow-visible' : 'overflow-hidden'}`}
+      >
         <img
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className={`absolute inset-0 h-full w-full ${mobileLayout ? 'object-contain object-top' : 'object-cover object-center'}`}
           src={hero}
           alt="The Kite Runner"
         />

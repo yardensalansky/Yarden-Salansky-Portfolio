@@ -1,11 +1,10 @@
 import { CloseCircleButton } from '../components/CloseCircleButton';
 import type { MobileProjectId } from './mobileProjects';
 import { MOBILE_PROJECTS } from './mobileProjects';
-import { ScaledFigmaCaseStudy } from './ScaledFigmaCaseStudy';
+import { MobileAWeatherDetail } from './MobileAWeatherDetail';
+import { MobileKiteRunnerDetail } from './MobileKiteRunnerDetail';
+import { MobileTheOneDetail } from './MobileTheOneDetail';
 import { MobileWarDiaryDetail } from './MobileWarDiaryDetail';
-import AWeatherDetials from '../../imports/AWeatherDetials/AWeatherDetials';
-import KiteRunnerDetails from '../../imports/TheKiteRunnerDetiales/TheKiteRunnerDetiales';
-import TheOneDetiales from '../../imports/TheOneDetiales/TheOneDetiales';
 
 interface MobileCanvasProjectDetailProps {
   projectId: MobileProjectId;
@@ -13,52 +12,30 @@ interface MobileCanvasProjectDetailProps {
   onNextProject?: () => void;
 }
 
-/** Same case studies as desktop `ProjectDetail`, scaled to the card width (Figma pages use `ScaledFigmaCaseStudy`). */
+/** Mobile-native vertical case studies (same content as desktop, no Figma scale). */
 function CaseStudyBody({
   projectId,
-  embedScrollParent,
   onNextProject,
 }: {
   projectId: MobileProjectId;
-  embedScrollParent: boolean;
   onNextProject?: () => void;
 }) {
   switch (projectId) {
     case 'proj1':
       return <MobileWarDiaryDetail onNextProject={onNextProject} />;
     case 'proj2':
-      return (
-        <ScaledFigmaCaseStudy
-          designWidth={1400}
-          designHeight={9343.56}
-          innerClassName="bg-white"
-          onNextProject={onNextProject}
-        >
-          <AWeatherDetials />
-        </ScaledFigmaCaseStudy>
-      );
+      return <MobileAWeatherDetail onNextProject={onNextProject} />;
     case 'proj3':
-      return (
-        <ScaledFigmaCaseStudy
-          designWidth={1400}
-          designHeight={6316}
-          innerClassName="bg-white"
-          onNextProject={onNextProject}
-        >
-          <KiteRunnerDetails />
-        </ScaledFigmaCaseStudy>
-      );
+      return <MobileKiteRunnerDetail onNextProject={onNextProject} />;
     case 'proj4':
-      return (
-        <TheOneDetiales embedScrollParent={embedScrollParent} onNextProject={onNextProject} />
-      );
+      return <MobileTheOneDetail onNextProject={onNextProject} />;
     default:
       return null;
   }
 }
 
 /**
- * Mobile detail shell: sticky close + one scroll area. Body matches web case studies (scaled), not custom mobile copies.
+ * Full-screen mobile detail — vertical stack, full-width media, readable type.
  */
 export function MobileCanvasProjectDetail({
   projectId,
@@ -74,36 +51,29 @@ export function MobileCanvasProjectDetail({
       role="dialog"
       aria-modal
       aria-labelledby="mobile-detail-title"
-      className={`relative z-[25] flex min-h-0 w-full max-w-full flex-col overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.28)] ring-1 ${
-        dark ? 'bg-[#DAD7DE] ring-white/15' : 'bg-white ring-black/[0.06]'
+      data-mobile-detail-panel
+      className={`relative z-[25] flex h-[100dvh] w-full max-w-full flex-col overflow-hidden ${
+        dark ? 'bg-black' : 'bg-white'
       }`}
-      style={{
-        maxHeight: 'min(92dvh, 880px)',
-        borderRadius: 24,
-        touchAction: 'pan-y',
-      }}
+      style={{ touchAction: 'pan-y' }}
     >
       <span id="mobile-detail-title" className="sr-only">
         {meta.title}
       </span>
       <CloseCircleButton
         size="lg"
-        className="absolute right-3 top-3 z-50 touch-manipulation"
+        className="absolute right-4 top-[max(0.75rem,env(safe-area-inset-top))] z-50 touch-manipulation"
         onClick={onClose}
         aria-label="Close"
         title="Close"
       />
       <div
-        className={`@container min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain ${
-          dark ? 'bg-[#DAD7DE]' : 'bg-white'
+        className={`min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain ${
+          dark ? 'bg-black' : 'bg-white'
         }`}
         style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
       >
-        <CaseStudyBody
-          projectId={projectId}
-          embedScrollParent={true}
-          onNextProject={onNextProject}
-        />
+        <CaseStudyBody projectId={projectId} onNextProject={onNextProject} />
       </div>
     </article>
   );

@@ -8,11 +8,15 @@ import { CASE_STUDY_ARTBOARD } from '../../app/components/caseStudy/caseStudyArt
 export interface TheOneDetialesProps {
   embedScrollParent?: boolean;
   onNextProject?: () => void;
+  minScale?: number;
+  mobileLayout?: boolean;
 }
 
 export default function TheOneDetiales({
   embedScrollParent = false,
   onNextProject,
+  minScale,
+  mobileLayout = false,
 }: TheOneDetialesProps) {
   return (
     <ScaledDesktopCaseStudy
@@ -21,8 +25,9 @@ export default function TheOneDetiales({
       scaledSurfaceClassName="bg-black"
       embedScrollParent={embedScrollParent}
       onNextProject={onNextProject}
+      minScale={minScale}
     >
-      <FrameTheOne />
+      <FrameTheOne mobileLayout={mobileLayout} />
     </ScaledDesktopCaseStudy>
   );
 }

@@ -1,3 +1,4 @@
+import { CaseStudyMetaRow } from '../../app/components/caseStudy/CaseStudyMetaRow';
 import { CLOUDINARY_ASSETS as C, CLOUDINARY_VIDEOS } from '../../constants/cloudinaryAssets';
 
 const imgHeroLaptop = C['b8e3ace9f5d57894a1227e35141bfe826f271e65'];
@@ -15,7 +16,7 @@ const imgTheEditionMagazineRight = C.theone_edition_magazine_right;
 /**
  * The One case study — 1400×9936 artboard (Figma export).
  */
-export default function FrameTheOne() {
+export default function FrameTheOne({ mobileLayout = false }: { mobileLayout?: boolean }) {
   return (
     <div className="relative h-[9936px] w-[1400px] overflow-hidden bg-black">
       <div className="absolute left-[-14px] top-[8619.86px] h-[822px] w-[1414px] bg-zinc-300" />
@@ -28,24 +29,13 @@ export default function FrameTheOne() {
           A conceptual luxury e-commerce experience inspired by Anna&nbsp;Wintour.
         </div>
         <div className="min-h-0 flex-1" aria-hidden />
-        <div className="inline-flex shrink-0 -translate-y-[10px] items-center justify-start gap-20">
-          <div className="inline-flex w-24 flex-col items-start justify-start gap-4">
-            <div className="justify-start self-stretch font-['Satoshi'] text-2xl font-bold text-neutral-500">YEAR</div>
-            <div className="justify-start self-stretch font-['Satoshi'] text-3xl font-black text-white">2026</div>
-          </div>
-          <div className="inline-flex w-72 flex-col items-start justify-start gap-4">
-            <div className="justify-start self-stretch font-['Satoshi'] text-2xl font-bold text-neutral-500">CLIENT</div>
-            <div className="justify-start self-stretch font-['Satoshi'] text-3xl font-black text-white">
-              Student Project{' '}
-            </div>
-          </div>
-          <div className="inline-flex w-80 flex-col items-start justify-start gap-4">
-            <div className="justify-start self-stretch font-['Satoshi'] text-2xl font-bold text-neutral-500">
-              DESIGN FIELD{' '}
-            </div>
-            <div className="justify-start self-stretch font-['Satoshi'] text-3xl font-black text-white">Website</div>
-          </div>
-        </div>
+        <CaseStudyMetaRow
+          className="w-full shrink-0 -translate-y-[10px] self-stretch"
+          year="2026"
+          client="Student Project"
+          field="Website"
+          dark
+        />
       </div>
       <div className="absolute left-[672px] top-[1208px] justify-start font-['Clash_Grotesk'] text-6xl font-semibold tracking-[0.12em] text-white">
         Concept
@@ -246,7 +236,9 @@ export default function FrameTheOne() {
         alt="(the) ONE magazine cover, alternate edition"
       />
       <div className="absolute left-0 top-0 h-[504px] w-[1420.22px]">
-        <div className="absolute left-0 top-0 h-[504px] w-[1420.22px] overflow-hidden bg-black">
+        <div
+          className={`absolute left-0 top-0 h-[504px] w-[1420.22px] bg-black ${mobileLayout ? 'overflow-visible' : 'overflow-hidden'}`}
+        >
           <div className="absolute left-[56px] top-[392px] justify-start font-['Hiragino_Kaku_Gothic_Std'] text-5xl font-extrabold text-black">
             A WEATHER
           </div>

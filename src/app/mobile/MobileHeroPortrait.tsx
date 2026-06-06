@@ -24,7 +24,7 @@ export function MobileHeroPortrait({ onExplore, onPlay, onAbout, fullBleed }: Mo
       const w = el.clientWidth;
       const h = el.clientHeight;
       if (w <= 0 || h <= 0) return;
-      setScale(Math.min(w / FRAME_W, h / FRAME_H));
+      setScale(Math.min(1, Math.min(w / FRAME_W, h / FRAME_H)));
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -97,7 +97,8 @@ export function MobileHeroPortrait({ onExplore, onPlay, onAbout, fullBleed }: Mo
             lineHeight: 1.35,
           }}
         >
-          I&apos;m a graphic designer who loves working from the sofa, but I&apos;ll give it up for a good job.
+          I&apos;m a Product Designer & Visual Storyteller who loves working from the sofa, but I&apos;ll give it up
+          for a good job.
         </p>
 
         {/* CTAs: one button per chip — text centered in the stone rectangle (Figma chip size/position) */}

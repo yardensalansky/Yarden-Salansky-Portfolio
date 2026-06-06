@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { CurvedLine } from '../components/CurvedLine';
 import { MobileWorkCanvasCard } from './MobileWorkCanvasCard';
-import { MOBILE_CARD_GAP } from './mobileCanvasLayout';
 import type { MobileProjectId } from './mobileProjects';
 import { MOBILE_PROJECTS } from './mobileProjects';
 
@@ -15,6 +14,7 @@ interface MobileHorizontalWorksClusterProps {
   workW: number;
   workH: number;
   gutter: number;
+  cardGap: number;
   exploreSeq: number;
   connectorColor: string;
   heroRing: string;
@@ -31,13 +31,14 @@ export function MobileHorizontalWorksCluster({
   workW,
   workH,
   gutter,
+  cardGap,
   exploreSeq,
   connectorColor,
   heroRing,
   onSelectWork,
 }: MobileHorizontalWorksClusterProps) {
-  const projectStride = workH + MOBILE_CARD_GAP;
-  const colH = MOBILE_PROJECTS.length * workH + (MOBILE_PROJECTS.length - 1) * MOBILE_CARD_GAP;
+  const projectStride = workH + cardGap;
+  const colH = MOBILE_PROJECTS.length * workH + (MOBILE_PROJECTS.length - 1) * cardGap;
   const worksTopOffset = Math.max(0, heroH / 2 - colH / 2);
   const clusterW = heroW + gutter + workW;
   const clusterH = Math.max(heroH, worksTopOffset + colH);
@@ -61,7 +62,7 @@ export function MobileHorizontalWorksCluster({
 
       <div className="relative z-[1] flex flex-row items-start">
         <div
-          className={`shrink-0 overflow-hidden rounded-[28px] shadow-2xl ring-1 ${heroRing}`}
+          className={`shrink-0 overflow-hidden rounded-[24px] shadow-[0_20px_48px_rgba(0,0,0,0.2)] ring-1 ${heroRing}`}
           style={{ width: heroW, height: heroH }}
         >
           {hero}
@@ -72,7 +73,7 @@ export function MobileHorizontalWorksCluster({
           style={{
             width: workW,
             marginTop: worksTopOffset,
-            gap: MOBILE_CARD_GAP,
+            gap: cardGap,
           }}
           initial={{ x: 56, opacity: 0.72 }}
           animate={{ x: 0, opacity: 1 }}

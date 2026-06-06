@@ -13,6 +13,8 @@ export interface ScaledDesktopCaseStudyProps {
   onNextProject?: () => void;
   footerBackgroundClassName?: string;
   footerTextClassName?: string;
+  /** Minimum uniform scale (mobile readability for 1400px artboards). */
+  minScale?: number;
   children: ReactNode;
 }
 
@@ -29,6 +31,7 @@ export function ScaledDesktopCaseStudy({
   onNextProject,
   footerBackgroundClassName,
   footerTextClassName,
+  minScale,
   children,
 }: ScaledDesktopCaseStudyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -44,16 +47,19 @@ export function ScaledDesktopCaseStudy({
     if (!el) return;
     const ro = new ResizeObserver(() => {
       const w = el.clientWidth;
-      if (w > 0) setScale(w / layoutW);
+      if (w > 0) {
+        const fit = w / layoutW;
+        setScale(minScale != null ? Math.max(fit, minScale) : fit);
+      }
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, [layoutW]);
+  }, [layoutW, minScale]);
 
   return (
     <div
       ref={containerRef}
-      className={`w-full min-h-0 overflow-x-hidden ${stackBg} ${
+      className={`w-full min-h-0 ${minScale != null ? 'overflow-x-auto' : 'overflow-x-hidden'} ${stackBg} ${
         embedScrollParent ? '' : 'h-full overflow-y-auto'
       }`}
     >
