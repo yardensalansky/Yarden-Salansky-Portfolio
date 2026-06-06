@@ -38,8 +38,9 @@ export function MobileApp() {
   const stationGutter = useMemo(() => computeMobileStationGutter(vw), [vw]);
   const cardGap = useMemo(() => computeMobileCardGap(vw), [vw]);
 
-  const connectorColor = '#b8b8b8';
-  const gridColor = '#d4d4d4';
+  /** Match desktop Canvas.tsx light theme */
+  const connectorColor = '#d0d0d0';
+  const gridColor = '#d0d0d0';
 
   const handleExplore = useCallback(() => {
     setExplored(true);
@@ -141,7 +142,7 @@ export function MobileApp() {
   }, [detailId, playBrainOpen, aboutOpen]);
 
   const sheetOpen = detailId !== null;
-  const canvasBg = '#e8e8ea';
+  const canvasBg = '#fafafa';
   const heroRing = 'ring-black/[0.07]';
 
   return (

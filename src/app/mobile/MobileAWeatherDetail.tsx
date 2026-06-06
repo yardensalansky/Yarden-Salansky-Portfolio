@@ -1,5 +1,4 @@
 import {
-  MobileCaseStudyBody,
   MobileCaseStudyCopy,
   MobileCaseStudyHeading,
   MobileCaseStudyHero,
@@ -10,6 +9,7 @@ import {
   MobileCaseStudySection,
   MobileCaseStudyStack,
   MobileCaseStudyVideo,
+  MobileCaseStudyVideoStackCarousel,
 } from './MobileCaseStudyLayout';
 
 const imgHero =
@@ -20,16 +20,32 @@ const imgAnna =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775811884/Anna-Wintour-2_1_glp792.png';
 const imgProblem =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775756262/6979113f0c313021048259e9086293da245860fe_vnjby6.png';
-const imgProblemPhone =
-  'https://res.cloudinary.com/drqk65xwl/image/upload/v1775756261/3231d5c923a8c3ca9d2bd0fe57aa3578a6d3aadb_ng1nci.png';
 const imgSolution =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775756257/7ea8ae0c5f02d1ab87e06688297a8f1b9e1ca1b7_gjhlow.png';
 const imgScreens =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775811958/Frame_290_1_babn7c.png';
 
-const video1 = 'https://res.cloudinary.com/drqk65xwl/video/upload/v1775768681/aweather1_ytdmer.mp4';
-const video2 = 'https://res.cloudinary.com/drqk65xwl/video/upload/v1775768683/aweather2_kdx4mm.mp4';
-const video3 = 'https://res.cloudinary.com/drqk65xwl/video/upload/v1775768691/aweather3_iqbrjn.mp4';
+/** Same phone frame sizes as desktop AWeatherDetials (w-64 / w-96), scaled for mobile. */
+const aWeatherDemoVideos = [
+  {
+    src: 'https://res.cloudinary.com/drqk65xwl/video/upload/v1775768681/aweather1_ytdmer.mp4',
+    aspectRatio: '256 / 568',
+    maxWidthPx: 220,
+    radiusPx: 30,
+  },
+  {
+    src: 'https://res.cloudinary.com/drqk65xwl/video/upload/v1775768683/aweather2_kdx4mm.mp4',
+    aspectRatio: '256 / 568',
+    maxWidthPx: 220,
+    radiusPx: 30,
+  },
+  {
+    src: 'https://res.cloudinary.com/drqk65xwl/video/upload/v1775768691/aweather3_iqbrjn.mp4',
+    aspectRatio: '256 / 568',
+    maxWidthPx: 220,
+    radiusPx: 30,
+  },
+];
 const videoPrototype = 'https://res.cloudinary.com/drqk65xwl/video/upload/v1775768773/aweather4_kao4mf.mov';
 
 export function MobileAWeatherDetail({ onNextProject }: { onNextProject?: () => void }) {
@@ -43,16 +59,19 @@ export function MobileAWeatherDetail({ onNextProject }: { onNextProject?: () => 
 
       <MobileCaseStudyMeta year="2026" client="Student Project" field="App" />
 
-      <MobileCaseStudyImage src={imgOverview} alt="A Weather app screens" />
-
-      <MobileCaseStudyVideo src={video1} />
-      <MobileCaseStudyVideo src={video2} />
-      <MobileCaseStudyVideo src={video3} />
+      <MobileCaseStudyImage
+        src={imgOverview}
+        alt="A Weather billboard"
+        aspectRatio="900 / 475"
+        objectPositionY={46}
+      />
 
       <MobileCaseStudyQuote>
         The app removes the need to interpret weather data. Instead, it delivers clear, authoritative direction telling
         the user exactly what to do.
       </MobileCaseStudyQuote>
+
+      <MobileCaseStudyVideoStackCarousel videos={aWeatherDemoVideos} />
 
       <MobileCaseStudySection>
         <MobileCaseStudyHeading>Research</MobileCaseStudyHeading>
@@ -71,12 +90,8 @@ export function MobileAWeatherDetail({ onNextProject }: { onNextProject?: () => 
           Most weather apps present information as neutral data, creating overload and visual noise. Without a clear
           hierarchy or voice, users are left to interpret what actually matters.
         </MobileCaseStudyCopy>
-        <MobileCaseStudyBody className="text-neutral-600">
-          Too much information — the user needs to figure it out alone.
-        </MobileCaseStudyBody>
       </MobileCaseStudySection>
       <MobileCaseStudyImage src={imgProblem} alt="Weather app problem" />
-      <MobileCaseStudyImage src={imgProblemPhone} alt="Competing weather UI" />
 
       <MobileCaseStudySection>
         <MobileCaseStudyHeading>The Solution</MobileCaseStudyHeading>

@@ -1,4 +1,4 @@
-import { CLOUDINARY_VIDEOS } from '../../constants/cloudinaryAssets';
+import { CLOUDINARY_ASSETS as C, CLOUDINARY_VIDEOS } from '../../constants/cloudinaryAssets';
 import {
   MobileCaseStudyCopy,
   MobileCaseStudyHeading,
@@ -12,8 +12,7 @@ import {
   MobileCaseStudyVideo,
 } from './MobileCaseStudyLayout';
 
-const hero =
-  'https://res.cloudinary.com/drqk65xwl/image/upload/v1775817963/withtext2_sbjcyk.png';
+const hero = C.thekiterunner_bg;
 const inspirationStill =
   'https://res.cloudinary.com/drqk65xwl/image/upload/v1775840223/Screenshot_2026-04-10_at_19.53.12_pno2nv.png';
 const conceptFirst =
@@ -91,7 +90,7 @@ export function MobileKiteRunnerDetail({ onNextProject }: { onNextProject?: () =
         src={CLOUDINARY_VIDEOS.thekiterunner2}
         autoPlay={false}
         controls
-        poster={styleFramesComposite}
+        playWhenVisible
       />
     </MobileCaseStudyStack>
   );

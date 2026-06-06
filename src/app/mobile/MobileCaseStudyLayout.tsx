@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { CaseStudyMetaRow } from '../components/caseStudy/CaseStudyMetaRow';
 import { NextProjectFooter } from '../components/caseStudy/NextProjectFooter';
 
 export { MobileCaseStudyImageCarousel } from './MobileCaseStudyImageCarousel';
+export { MobileCaseStudyVideoStackCarousel } from './MobileCaseStudyVideoStackCarousel';
 
 interface MobileCaseStudyStackProps {
   children: ReactNode;
@@ -107,7 +108,7 @@ export function MobileCaseStudyMeta({
       field={field}
       dark={dark}
       size="mobile"
-      className={`border-b py-6 ${dark ? 'border-white/15' : 'border-neutral-200'}`}
+      className="py-6"
     />
   );
 }
@@ -159,6 +160,7 @@ export function MobileCaseStudyImage({
   src,
   alt = '',
   aspect = 'auto',
+  aspectRatio,
   objectPosition = 'center',
   objectPositionY,
 }: {
@@ -166,6 +168,8 @@ export function MobileCaseStudyImage({
   alt?: string;
   /** Square crops full width; use objectPosition to anchor the visible area. */
   aspect?: 'auto' | 'square';
+  /** Custom crop frame (e.g. "900 / 475"). Crops via object-cover inside a fixed-ratio box. */
+  aspectRatio?: string;
   objectPosition?: 'center' | 'top' | 'bottom';
   /** Vertical crop focal point (0–100). Higher values cut more from the top. */
   objectPositionY?: number;
@@ -180,6 +184,20 @@ export function MobileCaseStudyImage({
       : '';
   const positionStyle =
     objectPositionY !== undefined ? { objectPosition: `center ${objectPositionY}%` } : undefined;
+
+  if (aspectRatio) {
+    return (
+      <div className="w-full overflow-hidden" style={{ aspectRatio }}>
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          style={positionStyle}
+          className={`block h-full w-full object-cover ${positionClass}`}
+        />
+      </div>
+    );
+  }
 
   if (aspect === 'square') {
     return (
@@ -211,20 +229,48 @@ export function MobileCaseStudyVideo({
   autoPlay = true,
   controls = false,
   poster,
+  playWhenVisible = false,
 }: {
   src: string;
   autoPlay?: boolean;
   controls?: boolean;
   poster?: string;
+  /** Start playback when scrolled into view; pause when scrolled away. */
+  playWhenVisible?: boolean;
 }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (!playWhenVisible) return;
+    const wrap = wrapRef.current;
+    const video = videoRef.current;
+    if (!wrap || !video) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.35, rootMargin: '0px 0px -8% 0px' }
+    );
+    io.observe(wrap);
+    return () => io.disconnect();
+  }, [playWhenVisible]);
+
   return (
-    <div className="w-full bg-black">
+    <div ref={wrapRef} className="w-full bg-black">
       <video
-        autoPlay={autoPlay}
+        ref={videoRef}
+        autoPlay={playWhenVisible ? false : autoPlay}
         muted={!controls}
         loop={!controls}
         playsInline
         controls={controls}
+        preload={playWhenVisible || controls ? 'metadata' : 'auto'}
         poster={poster}
         className="block w-full object-cover"
       >
